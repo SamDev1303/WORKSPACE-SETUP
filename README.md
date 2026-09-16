@@ -37,21 +37,9 @@ Use it whenever a change needs verifiable evidence that it works, instead of pro
 
 > The recorder needs `ffmpeg`/`ffprobe` built with `libx264` and the `ass` filter, plus a screen-capture source: X11 (`DISPLAY`) or wlroots Wayland (`wf-recorder`; GNOME/KDE are not supported) on Linux, Screen Recording permission on macOS, any standard ffmpeg on Windows. `python3 scripts/evidence.py doctor` reports both. The raw capture is MPEG-TS, so a crashed or hard-killed recorder still yields usable evidence. The headless path needs only a running app and a scriptable browser (Playwright via npx). Posting evidence requires the `gh` CLI (or equivalent). `tests/test_evidence.py` smoke-tests the recorder end to end with a synthetic video source (`python3 -m pytest tests/ -q`).
 
-### [greploop](greploop/SKILL.md)
+### [org-loop](org-loop/SKILL.md)
 
-Iteratively fixes a PR (GitHub), MR (GitLab), or shelved changelist (Perforce) until Greptile gives a perfect review: 5/5 confidence with zero unresolved comments. Triggers the review, fixes actionable comments, resolves threads, pushes, and repeats, up to `--max-iterations` cycles (default 10).
-
-Use it to get a PR to a clean Greptile review before merge.
-
-> Vendored from [greptileai/skills](https://github.com/greptileai/skills) (MIT, license included in the folder). Requires Greptile installed on the repo and an authenticated `gh`/`glab`/`p4` CLI.
-
-### [greploop-apps](greploop-apps/SKILL.md)
-
-The same loop as greploop, but it triggers reviews by tagging `@greptile-apps`, which bypasses Greptile's file-count limit on huge PRs that the plain `@greptile` mention refuses to review. When no check run appears, it falls back to polling Greptile's edited summary comment.
-
-Use it when greploop's trigger gets "Too many files changed for review".
-
-> Local variant derived from greptileai's greploop (MIT, license included in the folder); no separate upstream.
+Iterates a PR or branch until the org's own reviewer seats score it **5/5 with zero open findings** on a shared board: blind review → board → cross-examination → deterministic score → fix → next round. Greptile's loop shape (Summary · Confidence 0–5 · P0/P1/P2 · suggested fix) with our reviewers, and a fixer who never grades their own work. Replaces `org-loop` and `org-loop-apps`.
 
 ### [new-feature](new-feature/SKILL.md)
 
@@ -78,7 +66,7 @@ Use it when:
 
 ## Workflow
 
-[`AGENTS.md`](AGENTS.md) ties the skills together into a four-beat workflow: isolate (`new-feature`) → build (`code-structure`) → prove (`evidence-driven-testing`) → ship (`before-and-after` + `greploop`), with `unslop` applied to everything written for humans along the way. Drop it into a repo alongside the skills and fill in the repo-specific callouts (checks, invariants, environment).
+[`AGENTS.md`](AGENTS.md) ties the skills together into a four-beat workflow: isolate (`new-feature`) → build (`code-structure`) → prove (`evidence-driven-testing`) → ship (`before-and-after` + `org-loop`), with `unslop` applied to everything written for humans along the way. Drop it into a repo alongside the skills and fill in the repo-specific callouts (checks, invariants, environment).
 
 ## Installation
 

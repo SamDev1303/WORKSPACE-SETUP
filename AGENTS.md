@@ -18,12 +18,13 @@ callouts; it also governs work in this repo itself.
    plus runtime evidence. Capture the **before** state while reproducing the
    issue — prior to fixing it, when it is cheapest — and the **after** once
    the change works.
-4. **Ship — `/before-and-after`, then `/greploop`.** Open the PR with
+4. **Ship — `/before-and-after`, then `/org-loop`.** Open the PR with
    before/after proof embedded in the description (screenshot or video
    whenever the change has a visible surface; measured numbers or output
-   pairs when it doesn't). Run `/greploop` — or `/greploop-apps` when the PR
-   exceeds Greptile's file-count limit — until Greptile reports **5/5 with
-   zero unresolved comments**. Finish by presenting the PR URL.
+   pairs when it doesn't). Run `/org-loop` until the org's own reviewers
+   report **5/5 with zero open findings** on the shared board — the fixer
+   never grades its own work; a close needs a reviewer's AGREE. Finish by
+   presenting the PR URL.
 
 Ship-beat notes:
 
@@ -73,12 +74,18 @@ wrote or changed, not to prose you didn't touch.
 6. Open the PR. The body must explain what changed, how it was tested (every
    claim backed by evidence), before/after proof, and any risks or follow-up
    work. Run the title and body through `/unslop` before posting.
-7. Run `/greploop` (or `/greploop-apps`) until **5/5 with zero unresolved
-   comments**.
+7. Run `/org-loop` until **5/5 with zero open findings**.
 8. End by presenting the PR URL.
 
 Do not merge the PR unless explicitly instructed. Keep the worktree until
 the PR is merged or closed.
+
+## Repo-specific
+
+- Checks: `bash scripts/validate-skill.sh --all --strict` in a skills repo; in an app repo, the exact test/typecheck
+  commands go here.
+- Hard invariants: never type a model id — seats are registry lane names; nothing runs a model the owner has not named.
+- Plans live in `<workspace>/.planning/plans/` with `.planning/CURRENT-PLAN.md` pointing at the active one.
 
 ## Repo-specific sections to add
 
@@ -93,6 +100,5 @@ infrastructure (stubs, fixtures), and anything that can't be tested locally.
 |---|---|
 | `new-feature`, `code-structure`, `evidence-driven-testing` | this repo |
 | `before-and-after` | this repo, vendored from [vercel-labs/before-and-after](https://github.com/vercel-labs/before-and-after) (or `npx skills add vercel-labs/before-and-after`) |
-| `greploop` | this repo, vendored from [greptileai/skills](https://github.com/greptileai/skills) |
-| `greploop-apps` | this repo (local variant of greploop for huge PRs; no separate upstream) |
+| `org-loop` | this repo, authored for the ClaudeKing org (replaces greploop + greploop-apps: same loop, our reviewers, a board the fixer cannot grade) |
 | `unslop` | this repo, vendored from [cursor/plugins (pstack)](https://github.com/cursor/plugins/tree/main/pstack/skills/unslop); frontmatter edited so agents apply it unprompted (`disable-model-invocation` dropped, description scoped to text the agent writes or edits for people), body untouched |
