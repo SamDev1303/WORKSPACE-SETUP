@@ -37,9 +37,9 @@ Use it whenever a change needs verifiable evidence that it works, instead of pro
 
 > The recorder needs `ffmpeg`/`ffprobe` built with `libx264` and the `ass` filter, plus a screen-capture source: X11 (`DISPLAY`) or wlroots Wayland (`wf-recorder`; GNOME/KDE are not supported) on Linux, Screen Recording permission on macOS, any standard ffmpeg on Windows. `python3 scripts/evidence.py doctor` reports both. The raw capture is MPEG-TS, so a crashed or hard-killed recorder still yields usable evidence. The headless path needs only a running app and a scriptable browser (Playwright via npx). Posting evidence requires the `gh` CLI (or equivalent). `tests/test_evidence.py` smoke-tests the recorder end to end with a synthetic video source (`python3 -m pytest tests/ -q`).
 
-### [org-loop](org-loop/SKILL.md)
+### [org](org/SKILL.md)
 
-Iterates a PR or branch until the org's own reviewer seats score it **5/5 with zero open findings** on a shared board: blind review → board → cross-examination → deterministic score → fix → next round. Greptile's loop shape (Summary · Confidence 0–5 · P0/P1/P2 · suggested fix) with our reviewers, and a fixer who never grades their own work. Replaces `org-loop` and `org-loop-apps`.
+The org's own multi-agent contract: `/org dispatch` (send work to a seat), `/org plan` (adversarial plan review before a human sees it), `/org review` (the single-pass merge gate: PASS / FLAG / BLOCK from independent reviewer seats), `/org loop` (iterate a PR or branch until the seats score it **5/5 with zero open findings** on a shared board: blind review → board → cross-examination → deterministic score → fix → next round). Replaces the two Greptile-loop skills this pack used to carry (archived in the skills repo): same loop shape, our reviewers, a fixer who never grades their own work. The engine lives in the Koda runtime; `org/INSTALL.md` says how a machine gets it and `org/scripts/preflight.sh` checks it without running a model.
 
 ### [new-feature](new-feature/SKILL.md)
 
@@ -64,23 +64,32 @@ Use it when:
 
 > Vendored from [cursor/plugins (pstack)](https://github.com/cursor/plugins/tree/main/pstack/skills/unslop) (MIT, license included in the folder). The body matches upstream; the frontmatter has two edits so agents apply the skill on their own instead of waiting for a typed `/unslop`. We dropped the `disable-model-invocation: true` line, and the description now names the trigger (text you write or edit for a human reader) in place of upstream's "any writing. Must always apply.", so auto-invocation matches the scope `AGENTS.md` gives it. Restore the flag if you want slash-command-only behavior.
 
+### [workspace](workspace/SKILL.md)
+
+The entry skill: `/workspace enter|start|feature|app|web|end`. Walk into any folder, repo or project the same way on any CLI (Claude Code, Codex, OpenCode, Antigravity, Grok, Kimi): read the markdowns first, repair on entry (CLAUDE.md, AGENTS.md with the canonical workflow block, STRUCTURE.md, PLAN.md, STATE.md, `.planning/CURRENT-PLAN.md`), check the structure, then work inside the four beats. Beat 0 uses GSD when it is installed and the pack's own checklist otherwise, so every CLI gets real steps.
+
 ## Workflow
 
-[`AGENTS.md`](AGENTS.md) ties the skills together into a four-beat workflow: isolate (`new-feature`) → build (`code-structure`) → prove (`evidence-driven-testing`) → ship (`before-and-after` + `org-loop`), with `unslop` applied to everything written for humans along the way. Drop it into a repo alongside the skills and fill in the repo-specific callouts (checks, invariants, environment).
+[`AGENTS.md`](AGENTS.md) carries the canonical workflow block every workspace copies: enter (`workspace`) → isolate (`new-feature`) → build (`code-structure`) → prove (`evidence-driven-testing`) → ship (`before-and-after` + `org loop`), with `unslop` applied to everything written for humans along the way. Drop it into a repo alongside the skills and fill in the repo-specific callouts (checks, invariants, environment).
 
 ## Installation
 
-Clone the repo and copy (or symlink) a skill folder into your skills directory:
+Clone the repo and link (or copy) a skill folder into **both** skills directories, one per family of CLIs:
 
 ```bash
-# Available in all projects
-cp -r code-structure ~/.claude/skills/
+# Claude Code reads this one
+ln -s "$PWD/workspace" ~/.claude/skills/workspace
 
-# Or scoped to a single project
+# Codex, OpenCode, Antigravity, Kimi and Grok read this one
+ln -s "$PWD/workspace" ~/.agents/skills/workspace
+
+# Or scoped to a single project (Claude Code)
 cp -r code-structure /path/to/project/.claude/skills/
 ```
 
-Claude Code picks up the skill automatically and invokes it when a task matches the skill's description. You can also invoke one explicitly with `/code-structure` or `/evidence-driven-testing`.
+Each CLI picks the skill up when a task matches its description, or on an explicit `/workspace enter`, `/code-structure`, `/org loop`. The `org` skill also needs the engine; see `org/INSTALL.md`.
+
+This pack is a one-way copy of the ClaudeKing skills repo: `scripts/sync-workspace-pack.sh --check` there fails on any drift, so edits happen in the skills repo and land here by sync, never by hand.
 
 ## Adding a new skill
 

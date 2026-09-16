@@ -1,6 +1,10 @@
 ---
-name: org-loop
-description: "Iterate a PR or branch until the org's own reviewers score it 5/5 with zero open findings — Greptile's loop shape (Summary · Confidence 0–5 · P0/P1/P2 · suggested fix) run by independent reviewer seats on a shared board the fixer cannot grade. Use for 'org loop', 'drive the review to PASS', 'iterate until 5/5', and anything that used to be greploop or greploop-apps."
+name: org
+description: "THE org skill — dispatch · plan · review · loop, one contract. Use it for ANY multi-agent work: dispatching a task to Gideon/Astra (codex), Atlas (Antigravity agy), Grok, Neo or the free minis; a second opinion or cross-validation; 'org review' / 'is this PR ready to merge' / 'check this branch or diff' (single-pass merge gate); 'org loop' / 'iterate until it scores 5/5' / 'drive the review to PASS' / anything that used to be greploop; and 'org plan' / 'review my plan' / 'find where this plan fails' before a plan reaches Sam. Trigger on /org, /org-dispatch, /org-review, /org-loop, /org-plan, /gideon, 'ask Gideon', 'ask Atlas', 'dispatch to', 'second opinion', 'full org', 'merge gate', 'greploop', 'thanos', 'autonomous loop', 'plan review'. Absorbs org-dispatch, org-review, greploop, greploop-apps and thanos."
+aliases: [org-loop, org-plan]
+metadata:
+  version: "2.0.0"
+  replaces: [org-dispatch, org-review, greploop, greploop-apps, thanos]
 ---
 
 # /org — dispatch · plan · review · loop
@@ -12,7 +16,9 @@ findings** — Greptile's loop shape, our reviewers, a fixer who never grades th
 (`/org-dispatch`, `/org-review`, `/greploop`, `/thanos` are `merged-into: org` stubs).
 
 Mode detail lives in `references/` and is loaded only when that mode runs:
-`references/loop.md` (board format, score table, PR mirror, Greptile anatomy). The full four-mode skill (`org`: dispatch · plan · review · loop) and the scripts it runs live in the ClaudeKing runtime repo; this copy documents the loop contract so any repo carrying this AGENTS.md knows what "5/5 with zero open findings" means.
+`references/dispatch.md` (seat mechanics) · `references/review.md` (the gate, step by step) · `references/loop.md`
+(board format, score table, PR mirror, Greptile anatomy) · `references/plan.md` (plan review) ·
+`references/github-graphql.md` (thread queries the PR mirror uses).
 
 ## The shared contract (every mode)
 
