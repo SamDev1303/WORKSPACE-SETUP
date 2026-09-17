@@ -1,3 +1,20 @@
+<!-- FRESHNESS: 2026-09-17 · re-derive: scripts/bootstrap-workspace.sh /Users/shamalkrishna/Work/WORKSPACE-SETUP -->
+# WORKSPACE-SETUP — CLAUDE.md
+
+> Global rules: `~/.claude/CLAUDE.md` (canonical, always loaded). Plans: this workspace's `.planning/` (Rule A).
+
+## Purpose
+(fill)
+
+## Stack · build · test
+(fill: the exact commands)
+
+## Secrets
+Never in files; `~/api/KEYS.md` → env.
+
+## Do NOT
+(fill)
+
 <!-- WORKFLOW:BEGIN — canonical workflow block. Source of truth: ~/Tools/SKILLS/references/WORKFLOW.md. Written verbatim into every AGENTS.md and the workflow section of CLAUDE.md by scripts/bootstrap-workspace.sh --agents-md; scripts/check-agents-md.sh hashes every copy against this file. Edit HERE only. -->
 # Agent workflow
 
@@ -73,29 +90,3 @@ uses `~/claudeking.cloud/.planning/`; project work uses that project's `.plannin
 
 Do not merge the PR unless explicitly instructed. Keep the worktree until the PR is merged or closed.
 <!-- WORKFLOW:END -->
-
-## Repo-specific
-
-- Checks: `python3 -m pytest tests/ -q` here; `bash scripts/validate-skill.sh --all --strict` in the skills repo; in an app repo, the exact test/typecheck
-  commands go here.
-- Hard invariants: never type a model id — seats are registry lane names; nothing runs a model the owner has not named.
-- Plans live in `<workspace>/.planning/plans/` with `.planning/CURRENT-PLAN.md` pointing at the active one.
-
-## Repo-specific sections to add
-
-When dropping this file into a project, append what agents need to execute the beats there: commands and checks, hard
-invariants (security and architecture rules), an environment quick reference, local test infrastructure (stubs,
-fixtures), and anything that cannot be tested locally.
-
-## Skill sources
-
-| Skill | Source |
-|---|---|
-| `workspace` | this repo, authored for the ClaudeKing org — the entry skill every CLI runs on the way in |
-| `new-feature`, `code-structure`, `evidence-driven-testing` | this repo |
-| `before-and-after` | this repo, vendored from [vercel-labs/before-and-after](https://github.com/vercel-labs/before-and-after) (or `npx skills add vercel-labs/before-and-after`) |
-| `org` | this repo, authored for the ClaudeKing org (replaces the two Greptile-loop skills this pack carried — same loop, our reviewers, a board the fixer cannot grade); engine per `org/INSTALL.md` |
-| `unslop` | this repo, vendored from [cursor/plugins (pstack)](https://github.com/cursor/plugins/tree/main/pstack/skills/unslop); frontmatter edited so agents apply it unprompted |
-
-The block above `## Repo-specific` is copied verbatim from `references/WORKFLOW.md` (source of truth: the ClaudeKing
-skills repo); `scripts/sync-workspace-pack.sh --check` there fails when this copy drifts.

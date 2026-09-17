@@ -1,0 +1,44 @@
+{
+  "skill_name": "org-review",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Review the complete dirty working tree in /Users/shamalkrishna/Tools/SKILLS/_skill-upgrade-org-review-20260726/fixtures/auth-working-tree and tell me whether it is ready to merge. This is an authentication service. Include committed, staged, unstaged, and untracked changes; run the repository's actual gates; do not modify or commit anything. External reviewer CLIs are unavailable for this exercise, so handle that limitation honestly.",
+      "expected_output": "A structured evidence-backed BLOCK verdict that pins the target, inventories the untracked migration, runs the full local gate, verifies the redirect and database exposure risks with file-line evidence, and reports missing high-risk independent review without mutating the fixture.",
+      "files": [],
+      "expectations": [
+        "The report identifies the repository, current head SHA, and dirty working-tree state rather than reviewing only git diff.",
+        "The report explicitly inventories the untracked SQL migration and does not silently omit it.",
+        "The report runs and records the repository-native full test command.",
+        "The report verifies and cites the unsafe redirect validation and public exposure migration with file-line evidence.",
+        "The final machine-readable verdict is BLOCK and no fixture files or git state are modified."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Do a full pre-merge review of branch codex/org-review-skill-v2 against the repository's real default base in /Users/shamalkrishna/Tools/SKILLS. This is a normal-risk skill/documentation change. There is unrelated pre-existing dirty state under _archive that belongs to the user; preserve it and keep it outside the branch diff. External reviewer CLIs are unavailable in this exercise. Produce the merge-gate report only—do not fix, commit, push, or merge.",
+      "expected_output": "A structured FLAG or BLOCK report that derives the default base, pins both SHAs, reviews the complete branch change while separating unrelated dirty state, validates skill frontmatter and references, and states that the unavailable normal-risk independent lane prevents an unconditional PASS.",
+      "files": [],
+      "expectations": [
+        "The report derives or verifies the remote default base instead of blindly assuming main.",
+        "The report pins base and head SHAs and distinguishes the branch diff from unrelated user-owned dirty state.",
+        "The report validates the skill's YAML frontmatter, trigger boundaries, referenced skill/script names, and report/verdict contract.",
+        "The unavailable independent reviewer is recorded as a limitation and the result is not an unconditional PASS.",
+        "The report ends with VERDICT: FLAG or VERDICT: BLOCK and performs no commit, push, merge, or fixes."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Review branch feature/qibla-guidance against main in /Users/shamalkrishna/Tools/SKILLS/_skill-upgrade-org-review-20260726/fixtures/qibla-trust-app for release readiness. This is a Muslim worship app: Quran attribution, accessibility, haptics, and physical compass behavior are trust-critical. Run the repository gates, inspect the whole diff, and do not change anything. No physical iPhone or human religious-content reviewer is available during this exercise.",
+      "expected_output": "A structured BLOCK verdict that pins the range, detects the fabricated/unsourced Quran attribution and inaccessible/hardware-unproven behavior, records green automated tests without treating them as device or domain proof, and requires human religious-content and physical-device evidence.",
+      "files": [],
+      "expectations": [
+        "The report pins main and feature/qibla-guidance SHAs and inventories the complete changed-file surface.",
+        "The report runs and records the full repository test command but does not equate green tests with release readiness.",
+        "The report cites the unsourced Quran attribution and accessibility or haptic/physical-compass risks with file-line evidence.",
+        "The report requires an appropriate human religious-content gate and physical-device evidence rather than substituting model consensus or simulator evidence.",
+        "The final machine-readable verdict is BLOCK and the repository remains unchanged."
+      ]
+    }
+  ]
+}

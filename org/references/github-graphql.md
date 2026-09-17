@@ -1,3 +1,5 @@
+# GitHub GraphQL/REST snippets used by the /org loop PR mirror (from greploop/references/graphql-queries.md, 2026-09-16)
+
 # GraphQL Queries Reference
 
 ## Fetch unresolved review threads (paginated)
@@ -37,12 +39,12 @@ mutation {
 
 ## Fetch general PR comments edited in place (REST)
 
-General PR comments are issue comments. Greptile may update one summary comment repeatedly, so select by `updated_at` instead of `created_at`:
+General PR comments are issue comments. the org-loop summary may update one summary comment repeatedly, so select by `updated_at` instead of `created_at`:
 
 ```bash
 gh api --paginate "repos/{owner}/{repo}/issues/<PR_NUMBER>/comments?per_page=100" \
   | jq -s 'add
-    | map(select(.user.login | test("greptile"; "i")))
+    | map(select(.body | test("<!-- org-loop:summary -->")))   # the org-loop summary is found by its MARKER, not its author (it is posted by whoever ran the loop)
     | sort_by(.updated_at)
     | last
     | {author: .user.login, updated_at, body}'

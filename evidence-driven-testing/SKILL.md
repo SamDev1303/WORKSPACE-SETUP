@@ -291,3 +291,43 @@ swap the recorder for scripted capture:
   replaces them.
 - Hand before/after media pairs to a before/after tool for the PR embed
   (e.g. `before-and-after before.png after.png --markdown`).
+
+## The run has to be the environment the code actually ships in
+
+Evidence is only as good as the environment that produced it. A green run under
+the wrong runtime, a flow driven on a contended device, or a probe that proves a
+server is *awake* rather than *correct* all produce confident artifacts that
+assert nothing. These four came out of mined run records (2026-07 → 2026-09);
+each one had already burned a review round before it was written down.
+
+- **Invoke test runners with the runtime the repo pins, not the one your shell
+  inherits.** Many package-script runners (npm's among them) resolve the
+  interpreter from `PATH`, so a repo can pin a version in config and still run
+  its suite under whatever the shell exports. A mismatch may fail late, pass
+  misleadingly, or — in the three cases mined here — die during runner startup,
+  *before* app code executes, which is what makes it read as an app bug. Check
+  the runtime path from inside the failing process (`process.execPath` or the
+  equivalent) and call the pinned binary directly. Seen three times: a Jest/RN
+  startup failure, a release gate that had to name the pinned 22.x explicitly,
+  and a reviewer who traced a runner inheriting a newer shell runtime through a
+  package script.
+
+- **Serialize anything that holds an exclusive resource; parallelize only pure
+  reads.** Two device-automation flows on one simulator UDID interleave their
+  input events and produce a red that reproduces nowhere. The same shape bites
+  outside devices: a CLI keeping shared local state (a SQLite session DB, a
+  lockfile) fails with `database is locked` when two of its seats run at once —
+  three dispatch runs died that way before the cause was named. Static file
+  reads and unit tests parallelize freely; anything owning a device, a port, a
+  display or a shared database runs one at a time.
+
+- **A missing tool is not a failing app.** An absent CLI browser cache reads
+  exactly like a broken app when the driver cannot launch. Before filing a
+  regression, verify the harness itself can run: install the browser, or drive
+  the flow through a different one, and only then trust the red.
+
+- **Server liveness is not a rendered app.** A `200` from the dev server proves
+  the bundler answered, not that the app painted — a styling layer that failed
+  to initialize still serves `200` while rendering unstyled or blank. Check the
+  rendered result (a screenshot, a DOM/text assertion), never just the response
+  code, before presenting a link as working.

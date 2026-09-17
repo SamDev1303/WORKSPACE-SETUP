@@ -73,29 +73,3 @@ uses `~/claudeking.cloud/.planning/`; project work uses that project's `.plannin
 
 Do not merge the PR unless explicitly instructed. Keep the worktree until the PR is merged or closed.
 <!-- WORKFLOW:END -->
-
-## Repo-specific
-
-- Checks: `python3 -m pytest tests/ -q` here; `bash scripts/validate-skill.sh --all --strict` in the skills repo; in an app repo, the exact test/typecheck
-  commands go here.
-- Hard invariants: never type a model id — seats are registry lane names; nothing runs a model the owner has not named.
-- Plans live in `<workspace>/.planning/plans/` with `.planning/CURRENT-PLAN.md` pointing at the active one.
-
-## Repo-specific sections to add
-
-When dropping this file into a project, append what agents need to execute the beats there: commands and checks, hard
-invariants (security and architecture rules), an environment quick reference, local test infrastructure (stubs,
-fixtures), and anything that cannot be tested locally.
-
-## Skill sources
-
-| Skill | Source |
-|---|---|
-| `workspace` | this repo, authored for the ClaudeKing org — the entry skill every CLI runs on the way in |
-| `new-feature`, `code-structure`, `evidence-driven-testing` | this repo |
-| `before-and-after` | this repo, vendored from [vercel-labs/before-and-after](https://github.com/vercel-labs/before-and-after) (or `npx skills add vercel-labs/before-and-after`) |
-| `org` | this repo, authored for the ClaudeKing org (replaces the two Greptile-loop skills this pack carried — same loop, our reviewers, a board the fixer cannot grade); engine per `org/INSTALL.md` |
-| `unslop` | this repo, vendored from [cursor/plugins (pstack)](https://github.com/cursor/plugins/tree/main/pstack/skills/unslop); frontmatter edited so agents apply it unprompted |
-
-The block above `## Repo-specific` is copied verbatim from `references/WORKFLOW.md` (source of truth: the ClaudeKing
-skills repo); `scripts/sync-workspace-pack.sh --check` there fails when this copy drifts.
