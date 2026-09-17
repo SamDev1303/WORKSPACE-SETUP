@@ -25,3 +25,12 @@ What this skill learned in use. Newest first. Append a dated entry after any run
   `GROUPS` is a read-only builtin array — assigning to it silently exits the script.
 - **The c7 gate reads any `-m <word>` as a model flag** (`curl -m 20`, `python3 -m py_compile`) and a grep pattern
   containing "dispatch" as a dispatch. Logged as a fix-with-fixtures task, not dodged.
+
+## 2026-09-17 — Loop A on feat/org-loop (s147): 23 findings folded, 4 of 6 rounds lost to seats
+- r1 7 findings · r2 Neo `database is locked` (shared sqlite → per-seat OPENCODE_DB) · r3 2/5, 8 new findings · r4 Grok 402
+  unclassified + Neo tool loop · r5 `--continue` restored the dead seats · r6 first round with three live groups.
+- Every gap became engine code with a control the same session (see references/loop.md "Loop v2"); the lesson for the skill:
+  a loop's score is only as good as its weakest SEAT, so probe every seat on the dispatch path before round 1, and treat
+  two consecutive seat-killed rounds as "stop looping, ship on the review + board".
+- Deferred (brief 2): triage before ingest, delta-only rounds, confidence pass (<80 → suppressed), repeat guard, rules
+  append on refuted claims (agents/board/rules), per-round metrics on BOARD.md.

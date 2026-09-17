@@ -99,3 +99,25 @@ The fix step dispatches the **builder** lane in `DISPATCH_MODE=build` (`org-disp
 <fix-brief>`, cwd = the checkout) with the open findings as the brief, commits `org-loop <id> round N: autonomous fix`,
 marks them `fixed-pending`, and rolls into the next round; the reviewers (never the builder alone) close them. Machine-
 verifiable stop = the score rule; no critic-agent theatre. Stalls exit 4 to Sam.
+
+## Loop v2 (2026-09-17, learned on the runtime's own branch — six rounds, four killed by seats)
+
+Flags: `--models` takes LANE NAMES or known ids (unresolvable → exit 4) · `--max-rounds 0` is unbounded, a three-round
+stall (no close, no new finding) exits 4 with a `STALL:` line · `--ladder free|default` (a rung whose FAMILY is seated is
+skipped) · `--fresh-from a,b` names lanes OUTSIDE the run set for one blind round before PASS · `--continue` restores
+MODELS, BASE, PR, MAX, AUTO, LADDER, FRESH_FROM — and an explicit `--models` on `--continue` REPLACES the seat set and is
+written to the board (r4/r5: the restore kept dead seats forever) · `--autonomous` is explicit and dispatches only the
+builder lane.
+
+Seats: `select` lanes resolve LIVE (`opencode models` / OpenRouter free catalogue, 15-min cache, fail closed) and the
+approval key is `select:<lane>`; opinion groups derive from the resolved model FAMILY across providers (Ling via opencode
+and Ling via OpenRouter are one opinion). Every OpenCode seat runs with its own `OPENCODE_DB` + `XDG_STATE_HOME` (r2: two
+seats in one fan-out died on `database is locked`). A seat that ends with no VERDICT / empty / timeout is substituted from
+the ladder like a BLOCKED one (`why=no-verdict`); `402 Payment Required` / `balance exhausted` classify as quota (r4: Grok
+stayed silent because the wording did not match). The dispatcher, the loop and role-run exec from a private copy, so a
+build seat may edit them mid-run (r1: the running dispatcher read Astra's edit at line 1080 → rc 127 after a PASS).
+
+What a silent seat means: 0/5 by design — never approval. Neo (`opencode/mimo-v2.5-free`) cannot finish a blind review of
+a ~1000-line diff (tool-permission loop); use it for small diffs. When a round dies on seats, fix the SEAT class, `--continue`
+with a live set, and count only real rounds; after two seat-killed rounds in a row, ship on the single-pass review + the
+board (the rule's own fallback) instead of looping.
