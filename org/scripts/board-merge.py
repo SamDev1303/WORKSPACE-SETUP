@@ -1,7 +1,10 @@
-#!/usr/bin/env bash
-# board-merge.py — launcher for the org engine (the Koda runtime). Portable on purpose: no absolute /Users path.
-# KODA_ENGINE names the runtime checkout; default $HOME/claudeking.cloud. A missing engine is a named error, never a
-# silent no-op (org/INSTALL.md says how to get it). Replaced the absolute symlink 2026-09-16 (Astra r1 P1: dangling on any other machine).
-E="${KODA_ENGINE:-$HOME/claudeking.cloud}"; T="$E/agents/scripts/board-merge.py"
-[ -f "$T" ] || { echo "org: engine script not found at $T — install the Koda runtime beside this skill or set KODA_ENGINE (org/INSTALL.md)" >&2; exit 3; }
-exec python3 "$T" "$@"
+#!/usr/bin/env python3
+"""board-merge.py — launcher for the org engine (the Koda runtime). A .py file that IS python (skills review 2026-09-18: a bash shim named
+.py broke `python3 org/scripts/board-merge.py …` and every syntax-aware gate). KODA_ENGINE names the runtime checkout (default
+~/claudeking.cloud); a missing engine is a named error, exit 3 (org/INSTALL.md)."""
+import os, sys
+engine = os.environ.get("KODA_ENGINE") or os.path.expanduser("~/claudeking.cloud")
+target = os.path.join(engine, "agents", "scripts", "board-merge.py")
+if not os.path.isfile(target):
+    sys.stderr.write(f"org: engine script not found at {target} — install the Koda runtime beside this skill or set KODA_ENGINE (org/INSTALL.md)\n"); sys.exit(3)
+os.execv(sys.executable, [sys.executable, target, *sys.argv[1:]])

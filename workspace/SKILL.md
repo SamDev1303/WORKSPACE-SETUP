@@ -65,6 +65,8 @@ gets it. Every command below is a plain shell line, so codex, opencode, agy, gro
    exact commit. Headless here: scripted screenshots, probes, measured numbers, output pairs.
 4. **Ship — `/before-and-after`, then `/org loop`** until 5/5 with zero open findings. `/unslop` over the PR title and
    body. Only Astra (lane `builder`) and Koda build or merge; every other seat reviews. Present the PR URL.
+   **Without the engine** (a pack-only install, `org/INSTALL.md`): Ship is the repo's own PR review — open the PR with the
+   before/after proof, run the repo's checks in CI, and get one human or agent review before merge; `/org loop` needs the engine.
 
 ## app · web — the same four beats with a domain skill inside Build
 

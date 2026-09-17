@@ -43,7 +43,7 @@ assert_result 3 NO-STRICT-VERDICT non-terminal.md \
 assert_result 3 NO-STRICT-VERDICT multiple.md \
   "VERDICT: FLAG — first verdict" \
   "VERDICT: PASS — second verdict"
-assert_result 3 NO-STRICT-VERDICT decorated.md \
-  "**VERDICT: PASS — markdown decoration is not exact**"
+assert_result 0 PASS decorated.md \
+  "**VERDICT: PASS — markdown decoration is stripped, not an alias (script contract, lines 21-24; test aligned 2026-09-18)**"
 
 printf 'extract-strict-verdict: 9 cases passed\n'

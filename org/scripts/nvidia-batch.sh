@@ -5,7 +5,7 @@
 
 set -euo pipefail
 set -a
-source "${KODA_ENGINE:-$HOME/claudeking.cloud}/.env"
+_env="${KODA_ENGINE:-$HOME/claudeking.cloud}/.env"; [ -f "$_env" ] || { echo "nvidia-batch: $_env missing (NVIDIA_API_KEY lives there)" >&2; exit 2; }; source "$_env"
 set +a
 
 TOPIC="$1"
@@ -19,13 +19,14 @@ nvidia_call() {
   local model="${2:-$MODEL}"
   local max_tokens="${3:-500}"
 
+  export NB_MODEL="$model" NB_PROMPT="$prompt" NB_MAX_TOKENS="$max_tokens"   # 2026-09-18: values reach python via env, never interpolated into code
   python3 -c "
-import json, urllib.request, os
+import json, os, urllib.request, os
 
 payload = json.dumps({
-    'model': '$model',
-    'messages': [{'role': 'user', 'content': '''$prompt'''}],
-    'max_tokens': $max_tokens,
+    'model': os.environ['NB_MODEL'],
+    'messages': [{'role': 'user', 'content': os.environ['NB_PROMPT']}],
+    'max_tokens': int(os.environ['NB_MAX_TOKENS']),
     'temperature': 0.7
 }).encode()
 
