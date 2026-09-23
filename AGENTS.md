@@ -6,6 +6,8 @@
 This repo is the workspace pack: a one-way copy of the pack skills (`workspace`, `new-feature`, `code-structure`,
 `evidence-driven-testing`, `before-and-after`, `unslop`, `org`) and `references/WORKFLOW.md` from the ClaudeKing skills
 repo. Never edit a pack member here by hand — edit it in the skills repo and run `scripts/sync-workspace-pack.sh` there.
+The canonical block below is refreshed with the runtime's `scripts/bootstrap-workspace.sh <this dir> --agents-md`.
+Secrets never go in files here; values come from `~/api/KEYS.md` into env at run time.
 
 <!-- WORKFLOW:BEGIN — canonical workflow block. Source of truth: ~/Tools/SKILLS/references/WORKFLOW.md. Written verbatim into every AGENTS.md (the only rules file; no workspace keeps a CLAUDE.md) by scripts/bootstrap-workspace.sh --agents-md; scripts/check-agents-md.sh hashes every copy against this file. Edit HERE only. -->
 # Agent workflow
@@ -100,11 +102,11 @@ fixtures), and anything that cannot be tested locally.
 
 | Skill | Source |
 |---|---|
-| `workspace` | this repo, authored for the ClaudeKing org — the entry skill every CLI runs on the way in |
-| `new-feature`, `code-structure`, `evidence-driven-testing` | this repo |
-| `before-and-after` | this repo, vendored from [vercel-labs/before-and-after](https://github.com/vercel-labs/before-and-after) (or `npx skills add vercel-labs/before-and-after`) |
-| `org` | this repo, authored for the ClaudeKing org (replaces the two Greptile-loop skills this pack carried — same loop, our reviewers, a board the fixer cannot grade); engine per `org/INSTALL.md` |
-| `unslop` | this repo, vendored from [cursor/plugins (pstack)](https://github.com/cursor/plugins/tree/main/pstack/skills/unslop); frontmatter edited so agents apply it unprompted |
+| `workspace` | the ClaudeKing skills repo (copied here), authored for the ClaudeKing org — the entry skill every CLI runs on the way in |
+| `new-feature`, `code-structure`, `evidence-driven-testing` | the ClaudeKing skills repo (copied here) |
+| `before-and-after` | the skills repo (copied here), vendored from [vercel-labs/before-and-after](https://github.com/vercel-labs/before-and-after) (or `npx skills add vercel-labs/before-and-after`) |
+| `org` | the skills repo (copied here), authored for the ClaudeKing org (replaces the two Greptile-loop skills this pack carried — same loop, our reviewers, a board the fixer cannot grade); engine per `org/INSTALL.md` |
+| `unslop` | the skills repo (copied here), vendored from [cursor/plugins (pstack)](https://github.com/cursor/plugins/tree/main/pstack/skills/unslop); frontmatter edited so agents apply it unprompted |
 
 The block above `## Repo-specific` is copied verbatim from `references/WORKFLOW.md` (source of truth: the ClaudeKing
 skills repo); `scripts/sync-workspace-pack.sh --check` there fails when this copy drifts.

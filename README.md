@@ -66,7 +66,7 @@ Use it when:
 
 ### [workspace](workspace/SKILL.md)
 
-The entry skill: `/workspace enter|start|feature|app|web|end`. Walk into any folder, repo or project the same way on any CLI (Claude Code, Codex, OpenCode, Antigravity, Grok, Kimi): read the markdowns first, repair on entry (CLAUDE.md, AGENTS.md with the canonical workflow block, STRUCTURE.md, PLAN.md, STATE.md, `.planning/CURRENT-PLAN.md`), check the structure, then work inside the four beats. Beat 0 uses GSD when it is installed and the pack's own checklist otherwise, so every CLI gets real steps.
+The entry skill: `/workspace enter|start|feature|app|web|end`. Walk into any folder, repo or project the same way on any CLI (Claude Code, Codex, OpenCode, Antigravity, Grok, Kimi): read the markdowns first, repair on entry (AGENTS.md with the canonical workflow block — never a CLAUDE.md, STRUCTURE.md, PLAN.md, STATE.md, `.planning/CURRENT-PLAN.md`), check the structure, then work inside the four beats. Beat 0 uses GSD when it is installed and the pack's own checklist otherwise, so every CLI gets real steps.
 
 ## Workflow
 
