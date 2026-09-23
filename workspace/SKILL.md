@@ -29,20 +29,20 @@ gets it. Every command below is a plain shell line, so codex, opencode, agy, gro
 
 1. **Go there.** `cd <path>` (default: the current directory). Every later command runs with that cwd.
 2. **Read the markdowns before the files** (HARD RULE, Sam 2026-09-02). At the workspace root and in the directory
-   you are working in: `README.md`, `CLAUDE.md`, `AGENTS.md`, `STRUCTURE.md`, `PLAN.md`, `STATE.md`, `LESSONS.md`,
+   you are working in: `README.md`, `AGENTS.md`, `STRUCTURE.md`, `PLAN.md`, `STATE.md`, `LESSONS.md`,
    `NOTES.md` — whichever exist. The convention you are about to invent is usually written one file up.
 3. **Repair on entry.** `bash "${KODA_ENGINE:-"$HOME/claudeking.cloud"}/scripts/bootstrap-workspace.sh" "$PWD" --lifecycle auto`
-   ensures `CLAUDE.md`, `AGENTS.md` (the canonical workflow block), `STRUCTURE.md` (regenerated when stale or from
+   ensures `AGENTS.md` (the only rules file, with the canonical workflow block — it never creates a CLAUDE.md), `STRUCTURE.md` (regenerated when stale or from
    another worktree), `PLAN.md`, `STATE.md` with freshness stamps, and `.planning/` with `CURRENT-PLAN.md`.
    `--lifecycle auto` uses GSD when the plugin is installed, otherwise the pack's own checklist (see `references/checklist.md`).
    Leaving a workspace staler than you found it is a failure.
 4. **Check the structure.** `bash "${KODA_ENGINE:-"$HOME/claudeking.cloud"}/scripts/check-workspace-structure.sh" "$PWD"`
-   prints one line: ✓/✗ per item (AGENTS.md block at the source hash and the four structure essences, CLAUDE.md
-   workflow section, fresh STRUCTURE.md, CURRENT-PLAN.md, the pack skills on both skill surfaces). Fix a ✗ by re-running
+   prints one line: ✓/✗ per item (AGENTS.md block at the source hash and the four structure essences, no CLAUDE.md,
+   fresh STRUCTURE.md, CURRENT-PLAN.md, the pack skills on both skill surfaces). Fix a ✗ by re-running
    bootstrap, never by editing the check.
 5. **What is in flight.** Read `.planning/CURRENT-PLAN.md` (path · goal · phase). Scope check: `gh pr list`,
    `git status --short`, `git worktree list` — overlap with open work means stop and ask.
-6. **Say it back** in five lines: what the workspace is, its stack and checks (from CLAUDE.md), the active plan and
+6. **Say it back** in five lines: what the workspace is, its stack and checks (from AGENTS.md), the active plan and
    phase, what is dirty or open, and which mode comes next.
 
 ## start — a project that does not exist yet
