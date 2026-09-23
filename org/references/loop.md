@@ -24,16 +24,54 @@ with its extractor rewritten so the brief's own boilerplate can never become a f
 ## Findings
 | id | sev | type | file:line | claim | suggested fix | votes | status |
 | F3 | P1 | Logic | src/x.ts:42 | … | … | <builder id> AGREE · <grill-free id> AGREE · <gemini id> CANNOT-VERIFY | fixed-pending — note |
-## Rounds             one line per round: head, score, seats answered, blind/xexam run ids
+## Rounds             a metrics row per round: new · repeated · refuted · closed · repeat · seats answered · wall time
 ## Seats              model · opinion group · rc · verdict — a silent seat is listed as BLOCK
 ```
 
-`board.json` is the truth; `BOARD.md` is its rendering. Loop dirs: `agents/board/loops/<loop-id>/` with `round-N/`
-(per-seat briefs, inventory, diff, cross-exam brief, run pointers).
+`board.json` is the truth; `BOARD.md` is its rendering.
+
+**Where a board lives, and why it is not in the checkout.** Loop dirs are `${KODA_BOARD_DIR:-~/.cache/koda/org-loops}/<loop-id>/`
+with `round-N/` (per-seat briefs, inventory, diff, cross-exam brief, run pointers) — **machine-level state, under no git
+checkout.** They used to sit at `agents/board/loops/` inside the reviewed worktree, where they were gitignored so they
+could not dirty the review target. That solved one problem and created a worse one: at s147's close `git worktree remove`
+deleted a live board and its ~22 still-open reviewer findings, which had never been committed on any branch and could not
+be recovered. **A gitignored artefact inside a worktree dies with the worktree, silently** — `git worktree remove` refuses
+on modified and untracked files but deletes ignored content without a word.
+
+Two consequences to keep:
+
+- `--continue <id>` finds a board whose checkout is gone and says so by path, instead of "no loop <id>". The board is
+  still readable; it is the checkout that is missing.
+- A cache can still be wiped, so every round also writes a **tracked** digest to
+  `<workspace>/.planning/reviews/<loop-id>.md` — head, seats, score, one line per finding — regenerated in place, so two
+  rounds leave one file. It is written from the loop's EXIT trap, the only point that runs after every guard and after
+  publication, so it never dirties the tree that `--push`/`--pr`/`--autonomous` require clean. Commit it with your work:
+  committing is what makes it durable. `worktree-remove-guard.sh <path>` names anything still at risk before you remove
+  a worktree.
 
 ## Finding row (the only thing the extractor ingests)
 
-`| P0|P1|P2 | Logic|Syntax|Style|Security|Test|Docs | path:line | claim | suggested fix |`
+`| P0|P1|P2 | Logic|Syntax|Style|Security|Test|Docs | path:line | claim | suggested fix | evidence | confidence |`
+
+The 6th cell (evidence) is grepped at `path:line ±5`. The 7th (confidence, 0-100) is optional; below 80 the row is
+`suppressed`. An ABSENT confidence is "not stated", never low.
+
+**Statuses that are stored, listed on the board and never counted** — a row here is never approval, and never a finding:
+
+| status | set when |
+|---|---|
+| `ungrounded` | the evidence cell is not at `path:line ±5` nor anywhere in the round's diff |
+| `out-of-scope` | the file is not in the checkout, or is present but this change does not touch it |
+| `suppressed` | the author stated a confidence below 80 |
+| `repeat` | a already-refuted claim re-raised on lines the change does not touch — auto-closed, pointing at the refutation |
+
+`repeat` is decided before `out-of-scope`: such a row is both, but "we already answered this, and here is why" is the more
+specific thing to record. A refuted claim on lines that DID change reopens instead — the code moved out from under the
+refutation. Every confirmed refutation is appended to `agents/board/rules/<repo>.md`, which every later brief reads, so
+the same false positive is answered rather than re-litigated.
+
+**Round 2 onward reviews the DELTA** since the head the previous round reviewed, plus the open findings the brief already
+carries. Re-sending the whole range each round buried the fix under code earlier rounds had already passed.
 
 - Dedup key: `file` (line stripped) + normalised claim (first 60 alnum chars). Ids `F1…Fn` are stable across rounds.
 - Any row whose normalised text also appears in the brief (the format example, the board-so-far table) is dropped.

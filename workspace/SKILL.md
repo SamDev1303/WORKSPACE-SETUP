@@ -83,8 +83,12 @@ gets it. Every command below is a plain shell line, so codex, opencode, agy, gro
 2. `/workspace-hygiene` (routine tidy) and `/workspace-deep-clean` (build dirs, stale worktrees, scratch) when
    installed; **without them**: remove merged worktrees (`git worktree remove`), delete build output and scratch dirs,
    `git status --short` must be empty or explained.
-3. Lessons: append to the workspace `LESSONS.md` / the skill's `NOTES.md`; app work → `~/app-builder` when present.
-4. Koda sessions: `/donefortheday` (Linear session issue, daily log, memory). Other seats and pack-only installs: the
+3. **Before removing any worktree, list what git does not hold inside it.** `git worktree remove` refuses on modified
+   and untracked files, but deletes **ignored** content in silence — review boards, run logs, an uncommitted report.
+   `git -C <worktree> ls-files --others --ignored --exclude-standard` names them; commit, move or copy them out first.
+   A review record that existed only as an ignored file inside a worktree has been destroyed exactly this way.
+4. Lessons: append to the workspace `LESSONS.md` / the skill's `NOTES.md`; app work → `~/app-builder` when present.
+5. Koda sessions: `/donefortheday` (Linear session issue, daily log, memory). Other seats and pack-only installs: the
    Handover Brief (what changed · how it was verified · what is open) in the PR body or `STATE.md`.
 
 ## Rules that hold in every mode

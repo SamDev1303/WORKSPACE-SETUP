@@ -1,8 +1,17 @@
-<!-- WORKFLOW:BEGIN — canonical workflow block. Source of truth: ~/Tools/SKILLS/references/WORKFLOW.md. Written verbatim into every AGENTS.md and the workflow section of CLAUDE.md by scripts/bootstrap-workspace.sh --agents-md; scripts/check-agents-md.sh hashes every copy against this file. Edit HERE only. -->
+# WORKSPACE-SETUP — AGENTS.md
+
+> Global rules: `~/.agents/AGENTS.md` — every CLI loads it. This file is the workspace's only rules file; there is no
+> CLAUDE.md here, and none may be added.
+
+This repo is the workspace pack: a one-way copy of the pack skills (`workspace`, `new-feature`, `code-structure`,
+`evidence-driven-testing`, `before-and-after`, `unslop`, `org`) and `references/WORKFLOW.md` from the ClaudeKing skills
+repo. Never edit a pack member here by hand — edit it in the skills repo and run `scripts/sync-workspace-pack.sh` there.
+
+<!-- WORKFLOW:BEGIN — canonical workflow block. Source of truth: ~/Tools/SKILLS/references/WORKFLOW.md. Written verbatim into every AGENTS.md (the only rules file; no workspace keeps a CLAUDE.md) by scripts/bootstrap-workspace.sh --agents-md; scripts/check-agents-md.sh hashes every copy against this file. Edit HERE only. -->
 # Agent workflow
 
 Every task moves through the same beats, whichever CLI or agent runs it — Claude, Codex/Gideon, Antigravity/Atlas,
-OpenCode/Neo, Grok, Cursor. Drop this block into a repo as `AGENTS.md` (and the workflow section of `CLAUDE.md`), then
+OpenCode/Neo, Grok, Cursor, Kimi. Drop this block into a repo's `AGENTS.md` — the one rules file every CLI reads — then
 append the repo-specific callouts at the end; it also governs work in the repos that generate it.
 
 ## 0. GSD first
