@@ -15,7 +15,6 @@ Workspace: `/Users/shamalkrishna/Work/WORKSPACE-SETUP` · branch: `feat/workspac
 ./before-and-after/NOTES.md
 ./before-and-after/scripts
 ./before-and-after/SKILL.md
-./CLAUDE.md
 ./code-structure
 ./code-structure/NOTES.md
 ./code-structure/SKILL.md

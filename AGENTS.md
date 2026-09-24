@@ -1,8 +1,20 @@
-<!-- WORKFLOW:BEGIN — canonical workflow block. Source of truth: ~/Tools/SKILLS/references/WORKFLOW.md. Written verbatim into every AGENTS.md and the workflow section of CLAUDE.md by scripts/bootstrap-workspace.sh --agents-md; scripts/check-agents-md.sh hashes every copy against this file. Edit HERE only. -->
+# WORKSPACE-SETUP — AGENTS.md
+
+> Global rules: `~/.agents/AGENTS.md` — every CLI loads it. This file is the workspace's only rules file; there is no
+> CLAUDE.md here, and none may be added.
+
+This repo is the workspace pack: a one-way copy of the pack skills (`workspace`, `new-feature`, `code-structure`,
+`evidence-driven-testing`, `before-and-after`, `unslop`, `org`) and `references/WORKFLOW.md` from the ClaudeKing skills
+repo. Never edit a pack member here by hand — edit it in the skills repo and run `scripts/sync-workspace-pack.sh` there.
+The canonical block below is refreshed with the runtime's `scripts/bootstrap-workspace.sh <this dir> --agents-md`.
+Secrets never go in files here; values come from `~/api/KEYS.md` into env at run time.
+
+<!-- WORKFLOW:BEGIN — canonical workflow block. Source of truth: ~/Tools/SKILLS/references/WORKFLOW.md. Written verbatim into every AGENTS.md (the only rules file; no workspace keeps a CLAUDE.md) by scripts/bootstrap-workspace.sh --agents-md; scripts/check-agents-md.sh hashes every copy against this file. Edit HERE only. -->
+
 # Agent workflow
 
 Every task moves through the same beats, whichever CLI or agent runs it — Claude, Codex/Gideon, Antigravity/Atlas,
-OpenCode/Neo, Grok, Cursor. Drop this block into a repo as `AGENTS.md` (and the workflow section of `CLAUDE.md`), then
+OpenCode/Neo, Grok, Cursor, Kimi. Drop this block into a repo's `AGENTS.md` — the one rules file every CLI reads — then
 append the repo-specific callouts at the end; it also governs work in the repos that generate it.
 
 ## 0. GSD first
@@ -16,15 +28,18 @@ task. GSD owns the outer lifecycle (discuss → plan → execute → verify → 
 
 1. **Isolate — `/new-feature`.** Every task starts in a fresh git worktree branched from `origin/main`, created
    **beside** the primary checkout, never nested inside it. Never build on `main`.
+
 2. **Build — `/code-structure`.** Actions/boundaries orchestrate the "why/when"; a service layer owns the reusable
    "how", with explicit inputs and structured returns. Actions own the rules, auth, state transitions and error
    classification; a service owns one mechanic, takes explicit parameters, returns a structured result and never
    touches state directly; extract into a service only what two or more callers already repeat.
+
 3. **Prove — `/evidence-driven-testing`.** The repo's own checks plus runtime evidence. Capture the **before** while
    reproducing the issue — before fixing it, when it is cheapest — and the **after** once the change works. Headless
    environments use scripted screenshots, probes, measured numbers and output pairs. One assertion per state
    change; anything you could not exercise is marked `untested` with the reason, never left silent; every piece of
    evidence names the exact commit it was captured on.
+
 4. **Ship — `/before-and-after`, then `/org loop` until 5/5 with zero open findings.** Open the PR with before/after
    proof in the description. `/org review` is the single-pass merge gate (PASS/FLAG/BLOCK from independent reviewer
    seats); `/org loop` drives a FLAG or BLOCK to **5/5 with zero open findings** on the org's own board — the fixer never
@@ -48,14 +63,18 @@ uses `~/claudeking.cloud/.planning/`; project work uses that project's `.plannin
 
 - Never commit directly to `main`. Never force-push to `main`; never plain `--force` anywhere — only
   `--force-with-lease`, only on your own task branch.
+
 - One worktree and one branch per task and per agent — never reuse or modify another agent's worktree, branch, or
   uncommitted work. A brief is not a permission boundary: review seats run read-only by mechanism, and the checkout is
   fingerprinted before and after every fan-out.
+
 - **Scope check** before starting: skim open PRs' changed files (`gh pr list`, `gh pr diff <n> --name-only`) and look for
   uncommitted work in shared checkouts. On overlap, stop and ask for direction.
+
 - Resolve lockfile conflicts by regenerating, never by hand-merging.
 - Worktrees do not isolate shared resources: confirm a dev-server port answers *your* process before trusting it, and do
   not run schema experiments against a shared database.
+
 - Seats are addressed by registry lane name, never by a typed model id; nothing runs a model Sam has not named.
 - If a conflict cannot be resolved confidently, stop and report instead of guessing.
 
@@ -68,6 +87,7 @@ uses `~/claudeking.cloud/.planning/`; project work uses that project's `.plannin
 5. Push (`git push -u origin <branch>`; after rebasing an already-pushed branch, `--force-with-lease`).
 6. Open the PR. The body must explain what changed, how it was tested (every claim backed by evidence), before/after
    proof, and any risks or follow-up work. Run the title and body through `/unslop` before posting.
+
 7. Run `/org loop` until **5/5 with zero open findings**.
 8. End by presenting the PR URL.
 
@@ -91,11 +111,11 @@ fixtures), and anything that cannot be tested locally.
 
 | Skill | Source |
 |---|---|
-| `workspace` | this repo, authored for the ClaudeKing org — the entry skill every CLI runs on the way in |
-| `new-feature`, `code-structure`, `evidence-driven-testing` | this repo |
-| `before-and-after` | this repo, vendored from [vercel-labs/before-and-after](https://github.com/vercel-labs/before-and-after) (or `npx skills add vercel-labs/before-and-after`) |
-| `org` | this repo, authored for the ClaudeKing org (replaces the two Greptile-loop skills this pack carried — same loop, our reviewers, a board the fixer cannot grade); engine per `org/INSTALL.md` |
-| `unslop` | this repo, vendored from [cursor/plugins (pstack)](https://github.com/cursor/plugins/tree/main/pstack/skills/unslop); frontmatter edited so agents apply it unprompted |
+| `workspace` | the ClaudeKing skills repo (copied here), authored for the ClaudeKing org — the entry skill every CLI runs on the way in |
+| `new-feature`, `code-structure`, `evidence-driven-testing` | the ClaudeKing skills repo (copied here) |
+| `before-and-after` | the skills repo (copied here), vendored from [vercel-labs/before-and-after](https://github.com/vercel-labs/before-and-after) (or `npx skills add vercel-labs/before-and-after`) |
+| `org` | the skills repo (copied here), authored for the ClaudeKing org (replaces the two Greptile-loop skills this pack carried — same loop, our reviewers, a board the fixer cannot grade); engine per `org/INSTALL.md` |
+| `unslop` | the skills repo (copied here), vendored from [cursor/plugins (pstack)](https://github.com/cursor/plugins/tree/main/pstack/skills/unslop); frontmatter edited so agents apply it unprompted |
 
 The block above `## Repo-specific` is copied verbatim from `references/WORKFLOW.md` (source of truth: the ClaudeKing
 skills repo); `scripts/sync-workspace-pack.sh --check` there fails when this copy drifts.

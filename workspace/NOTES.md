@@ -10,3 +10,5 @@
   not collisions.
 - Beat 0 is "GSD when present, otherwise the checklist" so codex/agy/opencode get real steps, not commands they lack.
 - The pack copy in `~/Work/WORKSPACE-SETUP` is written by `scripts/sync-workspace-pack.sh`; edits happen here.
+
+- 2026-09-18 (s146 close): shipped in this session — see ~/claudeking.cloud/docs/LOG-2026-09.md and the ops-log comment on MYK-359.
