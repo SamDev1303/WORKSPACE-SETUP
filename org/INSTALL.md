@@ -8,7 +8,7 @@ is a launcher that execs the same-named file under `<engine>/agents/scripts/`; n
 
 | Setting | Default | Override |
 |---|---|---|
-| engine checkout | `$HOME/Sync/tools` | `export ORG_ENGINE=/path/to/engine` (`KODA_ENGINE` still works as a fallback) |
+| engine checkout | `$HOME/Sync/tools` | `export ORG_ENGINE=/path/to/engine` |
 
 A launcher that cannot find its engine script prints the path it looked at and exits 3. It never runs a model.
 

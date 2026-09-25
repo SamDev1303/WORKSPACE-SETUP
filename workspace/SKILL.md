@@ -21,7 +21,7 @@ the way into a folder, repo or project.
 /workspace end              close out: hygiene, STATE, plan pointer, session close
 ```
 
-The engine is the shared tools tree (`$ORG_ENGINE`, fallback `$KODA_ENGINE`, default `~/Sync/tools`); `org/INSTALL.md` explains how a machine
+The engine is the shared tools tree (`$ORG_ENGINE`, default `~/Sync/tools`); `org/INSTALL.md` explains how a machine
 gets it. Every command below is a plain shell line, so codex, opencode, agy, grok and kimi run the same steps Claude does.
 
 ## enter — the beat before any other beat
@@ -30,16 +30,17 @@ gets it. Every command below is a plain shell line, so codex, opencode, agy, gro
 2. **Read the markdowns before the files** (hard rule). At the workspace root and in the directory
    you are working in: `README.md`, `AGENTS.md`, `STRUCTURE.md`, `PLAN.md`, `STATE.md`, `LESSONS.md`,
    `NOTES.md` — whichever exist. The convention you are about to invent is usually written one file up.
-3. **Repair on entry.** `bash "${ORG_ENGINE:-${KODA_ENGINE:-"$HOME/Sync/tools"}}/scripts/bootstrap-workspace.sh" "$PWD" --lifecycle auto`
-   ensures `AGENTS.md` (the only rules file; it never creates a CLAUDE.md), `STRUCTURE.md` (regenerated when stale or
+3. **Repair on entry.** `bash "${ORG_ENGINE:-"$HOME/Sync/tools"}/scripts/bootstrap-workspace.sh" "$PWD" --lifecycle auto`
+   ensures `AGENTS.md` (the only rules file: a new one is `# <name>` plus the two-line pointer to `~/Sync/AGENTS.md`;
+   it never creates a CLAUDE.md), `STRUCTURE.md` (regenerated when stale or
    from another worktree), `PLAN.md`, `STATE.md` with freshness stamps, and the `.planning/` layout the global rules
    name: `PROJECT.md` (Goal, Users, Constraints, Done means, Out of scope), `CURRENT-PLAN.md`, `plans/` and `reviews/`.
    The checklist lifecycle writes `PROJECT.md`; under GSD, `/gsd-new-project` writes it.
    `--lifecycle auto` uses GSD when the plugin is installed, otherwise the pack's own checklist (see `references/checklist.md`).
    Leaving a workspace staler than you found it is a failure.
-4. **Check the structure.** `bash "${ORG_ENGINE:-${KODA_ENGINE:-"$HOME/Sync/tools"}}/scripts/check-workspace-structure.sh" "$PWD"`
-   prints one line: ✓/✗ per item (AGENTS.md block at the source hash and the four structure essences, no CLAUDE.md,
-   fresh STRUCTURE.md, CURRENT-PLAN.md, the pack skills on both skill surfaces). Fix a ✗ by re-running
+4. **Check the structure.** `bash "${ORG_ENGINE:-"$HOME/Sync/tools"}/scripts/check-workspace-structure.sh" "$PWD"`
+   prints one line: ✓/✗ per item (AGENTS.md points at `~/Sync/AGENTS.md` and carries no copied workflow block, no
+   CLAUDE.md, fresh STRUCTURE.md, CURRENT-PLAN.md, the pack skills on both skill surfaces). Fix a ✗ by re-running
    bootstrap, never by editing the check.
 5. **What is in flight.** Read `.planning/CURRENT-PLAN.md` (path · goal · phase). Scope check: `gh pr list`,
    `git status --short`, `git worktree list` — overlap with open work means stop and ask.

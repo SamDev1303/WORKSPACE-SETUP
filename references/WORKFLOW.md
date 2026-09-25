@@ -136,6 +136,10 @@ The `tailscale` CLI is installed on both Macs; use it whenever you need another 
   `~/.ssh/config` (`ssh air`, `ssh chromebook`), never a raw `ssh 100.x`.
 - **Air** (100.104.7.86): plain `tailscale status` works. Copy files with `rsync -avz <src> air:<dest>`; never hardcode its LAN IP.
 
+## Working from the Air
+
+`~/Sync` is the same on both Macs: rules, lessons, secrets, skills and tools need nothing extra on the Air. Project checkouts live on the mini under `~/Work`; the Air's own `~/Work` is a different tree. From the Air, work on a mini project directly over Tailscale: `ssh -t mini 'cd ~/Work/<project> && zsh -lic koda'` (the `mini` host is in the Air's `~/.ssh/config`; git, builds and simulators run on the mini). To edit a project locally on the Air as well, share that one project with `~/Sync/tools/scripts/share-project.sh <project>` (run on the mini): its working tree then syncs both ways under `~/Work/<project>` on both Macs, `.git` stays on the mini, and commits are made on the mini. Never put a whole `~/Work` or any `.git` directory into a Syncthing folder.
+
 ## Workspace-specific instructions
 
 Add only verified details to each workspace `AGENTS.md`:
