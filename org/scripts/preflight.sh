@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # preflight.sh — can /org run on THIS machine? One line per requirement, exit 1 on the first miss, naming it.
-# Runs no model. ORG_ENGINE overrides the engine checkout (default $HOME/Sync/tools). See org/INSTALL.md.
+# Runs no model. ORG_ENGINE (fallback KODA_ENGINE) overrides the engine checkout (default $HOME/Sync/tools). See org/INSTALL.md.
 set -u
-E="${ORG_ENGINE:-$HOME/Sync/tools}"; fail=0
+E="${ORG_ENGINE:-${KODA_ENGINE:-$HOME/Sync/tools}}"; fail=0
 say(){ printf '  %s %s\n' "$1" "$2"; [ "$1" = "✓" ] || fail=1; }
 [ -d "$E/agents/scripts" ] && say "✓" "engine: $E" || { say "✗" "engine missing at $E (set ORG_ENGINE or install the engine at ~/Sync/tools — org/INSTALL.md)"; exit 1; }
 for s in org-loop.sh plan-review.sh role-run.sh org-dispatch-gated.sh board-merge.py adapter-run.sh; do

@@ -123,6 +123,10 @@ A dispatched seat (codex, opencode, agy, grok, kimi) reads the Handover Brief it
 `VERDICT: PASS | FLAG | BLOCK` block it specifies, never commits or pushes unless the brief says so, and reports lessons
 in the brief's `## Lessons` section instead of writing memory files. codex headless: `codex exec -s <sandbox> ... < /dev/null`.
 
+## Graphify — reading a repo
+
+When a repo has `graphify-out/graph.json`, query it before grepping to learn the structure: `graphify explain "<symbol>"` for one symbol and its neighbours, `graphify path "<A>" "<B>"` for how two connect, `graphify query "<question>"` for a broad search; navigate `graphify-out/wiki/index.md` when it exists and read `GRAPH_REPORT.md` only for an architecture review. The graph is a navigation aid, not an authority: verify in the source before acting. After changing code run `graphify update .` (AST-only, no API cost); build a missing graph with `graphify .` at the repo root and keep `graphify-out/` out of git.
+
 ## Tailscale — reaching other devices
 
 The `tailscale` CLI is installed on both Macs; use it whenever you need another device (`tailscale status` lists them).

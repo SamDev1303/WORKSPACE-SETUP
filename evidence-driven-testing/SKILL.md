@@ -11,6 +11,10 @@ description: >
 compatibility: Screen-recording path requires a GUI environment the agent can drive — built-in computer use, or the cua-driver CLI (trycua/cua) when the harness has no computer-use tools — plus an authenticated browser session for the app under test. The bundled recorder (scripts/evidence.py) runs on Linux (X11 via x11grab, Wayland via wf-recorder), macOS (avfoundation, needs Screen Recording permission) and Windows (gdigrab) and needs Python 3 plus ffmpeg + ffprobe built with libx264 and the ass filter. The headless path requires only a running app and a scriptable browser (e.g. Playwright via npx). Posting evidence requires gh (GitHub CLI) or equivalent.
 metadata:
   version: "1.2"
+allowed-tools: Bash, Read, Write, Glob
+# Capabilities the bundled scripts use that no tool name above expresses. Claude Code does not enforce this;
+# SkillSpector LP1 checks it against the patterns it can see (it misses some SDK calls): verify by reading the scripts.
+permissions: [env]
 ---
 
 # Evidence-Driven Testing
@@ -242,10 +246,10 @@ swap the recorder for scripted capture:
   adding playwright to the project's dependencies:
 
   ```bash
-  npx --yes --package=playwright node record.mjs
+  npx --yes --package=playwright@1.63.0 node record.mjs
   ```
 
-  (Plain `npx playwright node record.mjs` fails — `node` is not a Playwright
+  (Handing `node record.mjs` to the Playwright CLI itself fails — `node` is not a Playwright
   CLI command; `--package=playwright` is what puts the module on the path.)
   Minimal `record.mjs`:
 

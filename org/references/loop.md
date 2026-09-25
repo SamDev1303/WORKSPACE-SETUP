@@ -65,6 +65,9 @@ The 6th cell (evidence) is grepped at `path:line ±5`. The 7th (confidence, 0-10
 | `suppressed` | the author stated a confidence below 80 |
 | `repeat` | a already-refuted claim re-raised on lines the change does not touch — auto-closed, pointing at the refutation |
 
+None of these can be marked: `board-merge.py set` refuses a mark on a non-counted row, because the mark would pull it
+back into the score. If one names a real problem, fix the code and let the next round judge it.
+
 `repeat` is decided before `out-of-scope`: such a row is both, but "we already answered this, and here is why" is the more
 specific thing to record. A refuted claim on lines that DID change reopens instead — the code moved out from under the
 refutation. Every confirmed refutation is appended to `agents/board/rules/<repo>.md`, which every later brief reads, so
@@ -83,6 +86,8 @@ carries. Re-sending the whole range each round buried the fix under code earlier
 Brief lists open findings anonymised (`- F3 · P1 · Logic · path:line · claim`) under **A. Is the finding real?** and the
 fixer's pending claims under **B. The fixer claims these are resolved**. Answer line per id:
 `F3. AGREE|DISAGREE|CANNOT-VERIFY — path:line — one sentence`.
+From round 2 on, a tool-less seat's brief also carries the base...HEAD hunks of every file a pending finding cites that
+the delta does not touch (or the file around the cited line), so a refutation that changed no code can still be checked.
 
 - **Confirmed** = at least one AGREE from a seat whose opinion group differs from every author's group. Otherwise
   `unconfirmed`. A same-group AGREE is the same opinion twice.

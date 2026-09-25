@@ -2,6 +2,7 @@
 name: org
 description: "THE org skill — dispatch · plan · review · loop, one contract. Use it for ANY multi-agent work: dispatching a task to Gideon/Astra (codex), Atlas (Antigravity agy), Grok, Neo or the free minis; a second opinion or cross-validation; 'org review' / 'is this PR ready to merge' / 'check this branch or diff' (single-pass merge gate); 'org loop' / 'iterate until it scores 5/5' / 'drive the review to PASS' / anything that used to be greploop; and 'org plan' / 'review my plan' / 'find where this plan fails' before a plan reaches Sam. Trigger on /org, /org-dispatch, /org-review, /org-loop, /org-plan, /gideon, 'ask Gideon', 'ask Atlas', 'dispatch to', 'second opinion', 'full org', 'merge gate', 'greploop', 'thanos', 'autonomous loop', 'plan review'. Absorbs org-dispatch, org-review, greploop, greploop-apps and thanos."
 aliases: [org-loop, org-plan]
+permissions: [env, shell]
 metadata:
   version: "2.0.0"
   replaces: [org-dispatch, org-review, greploop, greploop-apps, thanos]
