@@ -39,7 +39,7 @@ Use it whenever a change needs verifiable evidence that it works, instead of pro
 
 ### [org](org/SKILL.md)
 
-The org's own multi-agent contract: `/org dispatch` (send work to a seat), `/org plan` (adversarial plan review before a human sees it), `/org review` (the single-pass merge gate: PASS / FLAG / BLOCK from independent reviewer seats), `/org loop` (iterate a PR or branch until the seats score it **5/5 with zero open findings** on a shared board: blind review → board → cross-examination → deterministic score → fix → next round). Replaces the two Greptile-loop skills this pack used to carry (archived in the skills repo): same loop shape, our reviewers, a fixer who never grades their own work. The engine lives in the Koda runtime; `org/INSTALL.md` says how a machine gets it and `org/scripts/preflight.sh` checks it without running a model.
+The org's own multi-agent contract: `/org dispatch` (send work to a seat), `/org plan` (adversarial plan review before a human sees it), `/org review` (the single-pass merge gate: PASS / FLAG / BLOCK from independent reviewer seats), `/org loop` (iterate a PR or branch until the seats score it **5/5 with zero open findings** on a shared board: blind review → board → cross-examination → deterministic score → fix → next round). Replaces the two Greptile-loop skills this pack used to carry (archived in the skills repo): same loop shape, our reviewers, a fixer who never grades their own work. The engine lives in `~/Sync/tools`; `org/INSTALL.md` says how a machine gets it and `org/scripts/preflight.sh` checks it without running a model.
 
 ### [new-feature](new-feature/SKILL.md)
 
@@ -66,11 +66,11 @@ Use it when:
 
 ### [workspace](workspace/SKILL.md)
 
-The entry skill: `/workspace enter|start|feature|app|web|end`. Walk into any folder, repo or project the same way on any CLI (Claude Code, Codex, OpenCode, Antigravity, Grok, Kimi): read the markdowns first, repair on entry (create or refresh AGENTS.md with the canonical workflow block, STRUCTURE.md, PLAN.md, STATE.md and `.planning/CURRENT-PLAN.md`; never create a CLAUDE.md), check the structure, then work inside the four beats. Beat 0 uses GSD when it is installed and the pack's own checklist otherwise, so every CLI gets real steps.
+The entry skill: `/workspace enter|start|feature|app|web|end`. Walk into any folder, repo or project the same way on any CLI (Claude Code, Codex, OpenCode, Antigravity, Grok, Kimi): read the markdowns first, repair on entry (create or refresh AGENTS.md, STRUCTURE.md, PLAN.md, STATE.md and the `.planning/` layout of `PROJECT.md`, `CURRENT-PLAN.md`, `plans/` and `reviews/`; never create a CLAUDE.md), check the structure, then work inside the four beats. Beat 0 uses GSD when it is installed and the pack's own checklist otherwise, so every CLI gets real steps.
 
 ## Workflow
 
-[`AGENTS.md`](AGENTS.md) carries the canonical workflow block every workspace copies: enter (`workspace`) → isolate (`new-feature`) → build (`code-structure`) → prove (`evidence-driven-testing`) → ship (`before-and-after` + `org loop`), with `unslop` applied to everything written for humans along the way. Drop it into a repo alongside the skills and fill in the repo-specific callouts (checks, invariants, environment).
+The global rules live in `~/Sync/AGENTS.md`, the same file on the mini and the Air; [`references/WORKFLOW.md`](references/WORKFLOW.md) mirrors them. Each repo's `AGENTS.md` points at them and adds only repo-specific lines. The beats are enter (`workspace`) → isolate (`new-feature`) → build (`code-structure`) → prove (`evidence-driven-testing`) → ship (`before-and-after` + `org loop`), with `unslop` applied to everything written for humans along the way. Give a repo a pointer `AGENTS.md` like [this one](AGENTS.md) and fill in its repo-specific callouts (checks, invariants, environment).
 
 ## Installation
 
@@ -87,9 +87,11 @@ ln -s "$PWD/workspace" ~/.agents/skills/workspace
 cp -r code-structure /path/to/project/.claude/skills/
 ```
 
+`koda` is the shell alias for `claude --dangerously-skip-permissions`.
+
 Each CLI picks the skill up when a task matches its description, or on an explicit `/workspace enter`, `/code-structure`, `/org loop`. The `org` skill also needs the engine; see `org/INSTALL.md`.
 
-This pack is a one-way copy of the ClaudeKing skills repo: `scripts/sync-workspace-pack.sh --check` there fails on any drift, so edits happen in the skills repo and land here by sync, never by hand.
+This pack is a one-way copy of the skills repo at `~/Sync/skills`: `scripts/sync-workspace-pack.sh --check` there fails on any drift, so edits happen in the skills repo and land here by sync, never by hand.
 
 ## Adding a new skill
 

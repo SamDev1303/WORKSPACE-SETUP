@@ -30,7 +30,7 @@ with its extractor rewritten so the brief's own boilerplate can never become a f
 
 `board.json` is the truth; `BOARD.md` is its rendering.
 
-**Where a board lives, and why it is not in the checkout.** Loop dirs are `${KODA_BOARD_DIR:-~/.cache/koda/org-loops}/<loop-id>/`
+**Where a board lives, and why it is not in the checkout.** Loop dirs are `<org-loops cache>/<loop-id>/` (the engine's per-machine cache; `org-loop.sh` names the path and its override)
 with `round-N/` (per-seat briefs, inventory, diff, cross-exam brief, run pointers) — **machine-level state, under no git
 checkout.** They used to sit at `agents/board/loops/` inside the reviewed worktree, where they were gitignored so they
 could not dirty the review target. That solved one problem and created a worse one: at s147's close `git worktree remove`

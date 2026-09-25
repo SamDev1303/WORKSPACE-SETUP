@@ -1,7 +1,7 @@
-<!-- FRESHNESS: 2026-09-17 · re-derive: scripts/bootstrap-workspace.sh /Users/shamalkrishna/Work/WORKSPACE-SETUP -->
+<!-- FRESHNESS: 2026-09-17 · re-derive: scripts/bootstrap-workspace.sh ~/Work/WORKSPACE-SETUP -->
 # STRUCTURE — WORKSPACE-SETUP (generated, do not hand-edit)
 
-Workspace: `/Users/shamalkrishna/Work/WORKSPACE-SETUP` · branch: `feat/workspace-pack`
+Workspace: `~/Work/WORKSPACE-SETUP` · branch: `feat/workspace-pack`
 
 ```
 .

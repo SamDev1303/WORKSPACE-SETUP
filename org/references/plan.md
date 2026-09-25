@@ -1,13 +1,13 @@
 # /org plan — a plan is reviewed by the org before Sam sees it
 
-Standing rule (Sam 2026-08-28, made mechanical 2026-09-16): a plan Koda reviewed alone is a plan reviewed once. The
+Standing rule: a plan the author reviewed alone is a plan reviewed once. The
 lifecycle is **ask → write → adversarial review → present**.
 
 ## Steps
 
 1. **Ask first.** The questions whose answers change the plan go to Sam (`AskUserQuestion`) before a line is written —
    ownership, scope, anything that conflicts with an existing rule.
-2. **Write** with `koda-plan`'s GSD/superpowers flow (`/gsd-plan-phase` on an existing workspace, `/gsd-new-project` on a
+2. **Write** with the GSD/superpowers flow (`/gsd-plan-phase` on an existing workspace, `/gsd-new-project` on a
    new one). Every step carries its verification command.
 3. **Review**: `agents/scripts/plan-review.sh <plan> --models <ids>` — the adversarial brief ("find where this plan FAILS,
    not whether it looks good; severity P0–P3; path:line for repo claims") to the reviewer set in parallel via
@@ -18,10 +18,10 @@ lifecycle is **ask → write → adversarial review → present**.
    from any seat is folded or explicitly refuted in the plan text.
 5. **Fold and re-run**, at most **two rounds**. Present with the board attached (`BOARD.md` path in the plan header).
    Unresolved P0/P1 after round two → the plan is **not presented**; escalate to Sam with the board.
-6. **Before `ExitPlanMode`** (Sam 2026-09-16): the review above has run, and the plan is copied into the workspace —
+6. **Before `ExitPlanMode`**: the review above has run, and the plan is copied into the workspace —
    `<ws>/.planning/plans/YYYY-MM-DD-<slug>.md` with `<ws>/.planning/CURRENT-PLAN.md` pointing at it (path + one-line goal
    + phase reached). Claude Code's `~/.claude/plans/<random>.md` is never the source of truth: it is invisible to every
-   other CLI and unfindable after `/clear`. Koda-only work uses `~/claudeking.cloud/.planning/`; project work uses that
+   other CLI and unfindable after `/clear`. Work on the shared tools uses `~/Sync/.planning/`; project work uses that
    project's `.planning/`.
 
 ## What the plan reviewer is told

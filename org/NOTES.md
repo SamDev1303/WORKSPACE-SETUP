@@ -35,5 +35,5 @@ What this skill learned in use. Newest first. Append a dated entry after any run
 - Deferred (brief 2): triage before ingest, delta-only rounds, confidence pass (<80 → suppressed), repeat guard, rules
   append on refuted claims (agents/board/rules), per-round metrics on BOARD.md.
 - 2026-09-18 01:33 — a brief outside SEAT_CWD is unreadable to the read-only OpenCode seats (auto-rejected Read → no VERDICT,
-  rc 3, 1 minute). The brief must live INSIDE the reviewed checkout without dirtying it: `<checkout>/.git/koda-review-brief.md`
+  rc 3, 1 minute). The brief must live INSIDE the reviewed checkout without dirtying it: a review-brief file under `<checkout>/.git/`
   (inside cwd for the seat, ignored by the tree fingerprint). The loop and plan-review already do this via agents/board/loops.

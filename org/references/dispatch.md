@@ -3,7 +3,7 @@
 > This reference holds the per-seat detail behind `/org dispatch`. The contract (lanes by name, approvals, seat shapes,
 > verdicts, the board) lives in `../SKILL.md` and wins on any conflict.
 
-# org-dispatch — ClaudeKing Org Orchestration (the ONE dispatch skill)
+# org-dispatch — Org Orchestration (the ONE dispatch skill)
 
 > Merged 2026-07-05 from: org-dispatch + gideon-dispatch + org-manager +
 > nvidia-nim + 21-cli-orchestration. The `21-cli-orchestration/` dir still holds
@@ -15,7 +15,7 @@
 1. **Context7 gate**: verify model/CLI liveness before any dispatch (`scripts/probe-lane.sh <lane>` runs the dispatch path; the C7 stamp and Sam's per-id approval both last 24 h — `scripts/model-approval.sh show`).
 2. **Free-tier-only** for Gideon-fallbacks/Neo/minis (`agents/config/free-models.json` policy). NEVER paid Sonnet fallback.
 3. **Model IDs come from the SoT**: `scripts/resolve-model.sh <lane>` → `agents/config/free-models.json`. Never hardcode; update the JSON first, scripts read it.
-4. **NO SANDBOX** (Sam directive 2026-05-03): codex `--dangerously-bypass-approvals-and-sandbox` (or `-s danger-full-access` heredoc form — note these are different flags, both no-sandbox), opencode `--dangerously-skip-permissions`. Dispatch chain is trusted (Koda's Mac, agents in `~/Agents/`).
+4. **NO SANDBOX**: codex `--dangerously-bypass-approvals-and-sandbox` (or `-s danger-full-access` heredoc form — note these are different flags, both no-sandbox), opencode `--dangerously-skip-permissions`. Dispatch chain is trusted (the operator's Mac, agents in `~/Agents/`).
 5. **No commits by dispatched agents** — the handover brief enforces it; agy needs triple-layer no-commit wording (autocommits otherwise).
 6. **Google = OAuth only, never API key.** agy auth = keychain login (theopbros active). **gemini CLI is SUNSET (2026-06-18) — it no longer exists as a lane.** All three Google accounts may rotate onto agy via one-time TUI re-login (no --account flag).
 7. **File-based I/O always** — whole-file Write for briefs (never sed), prompts via files (special chars/Arabic/30K+ break shell vars).
@@ -23,7 +23,7 @@
 
 ## Two front doors
 
-| Door | When | Command (from ~/claudeking.cloud) |
+| Door | When | Command (from ~/Sync/tools) |
 |---|---|---|
 | **Quick** | fire-and-forget single agent | `agents/scripts/dispatch-manager.sh <agent> "task"` — `gideon`, `atlas`, `neo`, `mini-<name>` |
 | **Gated** | anything that matters | `agents/scripts/org-dispatch-gated.sh preflight` then `... dispatch <agent> <prompt-file>` — `gideon`, `atlas`, `neo`, `grill`, `lane-<registry lane>` (`nim-<name>`/`nim-all` are DEPRECATED aliases → `lane-mini-<name>`). `... resolve <agent>` prints the lane/provider/id it would run; `... lanes` lists the registry. |
@@ -56,7 +56,7 @@ ask: the harvested entries were specific and durable, and had simply never been 
 | Large-context reads, design/UX review | **Atlas** (agy) | Antigravity, paid AI Pro |
 | First-draft templates, wide-shallow parallel grunt work | **Minis** | Fast, parallel, cheap |
 | Dual-seat review / plan-check | **Gideon + Neo**, tiebreak **mini-specter** (OpenRouter free `nvidia/nemotron-3-super-120b-a12b:free`, tool-less, stateless) | Disjoint-bug coverage |
-| Synthesis, QA, final sign-off | **Koda** (+Gideon for code) | Orchestrator |
+| Synthesis, QA, final sign-off | **Claude Code** (+Gideon for code) | Orchestrator |
 
 Full-org (`/org`, all agents) ONLY for red-team review where independent
 perspectives are the point — not for production execution.
@@ -114,7 +114,7 @@ parallelize freely. Ask what a seat *holds*, not what it costs, when deciding wh
 - Hang at 0% CPU = MCP bootstrap hang → clear MCP config / clean dir.
 
 ### Atlas (Antigravity `agy`)
-- Always via `~/Tools/SKILLS/21-cli-orchestration/dispatch-antigravity.sh <prompt-file>` — handles: mkdir mutex (agy is SINGLE-INSTANCE, 2 concurrent = both hang), watchdog (agy ignores --print-timeout), auth/429 detection, the `-p`-drops-stdout bug (auto-retry once), neo fallback.
+- Always via `~/Sync/skills/21-cli-orchestration/dispatch-antigravity.sh <prompt-file>` — handles: mkdir mutex (agy is SINGLE-INSTANCE, 2 concurrent = both hang), watchdog (agy ignores --print-timeout), auth/429 detection, the `-p`-drops-stdout bug (auto-retry once), neo fallback.
 - **Prompt must be a positional arg** — `cat file | agy -p` makes agy print usage and exit 2.
 - **No headless --model flag** — model = whatever `/model` set in the TUI. Non-streaming: full answer only at process exit (long silence ≠ hang).
 - `AGY_ADD_DIR=<dir1:dir2>` injects workspace context (the --include-directories successor).
@@ -126,8 +126,8 @@ parallelize freely. Ask what a seat *holds*, not what it costs, when deciding wh
   `--pure` (it stalls in init and returns 0 bytes with empty stderr — indistinguishable from a model that had
   nothing to say), and treats an empty answer as a diagnosis: exit 4 plus the `opencode.log` tail, never exit 0
   with silence. Use `org-dispatch-gated.sh` for a gated review run; use `oc.sh` when you just need the seat.
-- **Spend is gated (Sam 2026-09-14).** Registry entries carry `cost` (free · subscription · metered · unverified);
-  a model Sam has not named is refused (rc 6 from adapter-run.sh); record his words with `scripts/model-approval.sh grant "model:<id>" "<his words>"` (24 h, per exact id, logged verbatim). `# paid-ok:` is retired — Koda authorising Koda was the thing removed. Prefer
+- **Spend is gated.** Registry entries carry `cost` (free · subscription · metered · unverified);
+  a model Sam has not named is refused (rc 6 from adapter-run.sh); record his words with `scripts/model-approval.sh grant "model:<id>" "<his words>"` (24 h, per exact id, logged verbatim). `# paid-ok:` is retired — the agent authorising itself was the thing removed. Prefer
   `grill-free` / `neo` — both free on opencode's own provider, no OpenRouter account needed.
 - `SEAT_CWD=<the checkout under review> agents/scripts/org-dispatch-gated.sh dispatch neo|grill <brief>` — **SEAT_CWD is REQUIRED**: opencode auto-rejects every read outside its `--dir`, so a seat launched from its home answers EMPTY (Neo, 2026-09-07). The gate runs the seat IN the checkout via `adapter-run.sh` (`opencode run --dir {cwd} --agent <lane.opencode_agent> -m <registry id>`), inlines the brief, captures stdout, and **fingerprints the checkout before/after — a mutation fails the run**. Agents `~/.config/opencode/agents/{neo,grill}.md` deny edits and every shell command outside a read-only allowlist (proven live: `echo x > f` → "permission requested … auto-rejecting", no hang). SEAT_CWD must be a git checkout under `$HOME` — `--dir` under `/private/tmp` hangs opencode (proven 2026-09-08).
 - **Model = the registry lane, never a flag or a file.** `neo` → `resolve-model.sh neo` (free zone); `grill` → registry lane `grill` (codex the builder lane id at xhigh since 2026-09-16 — the adversarial voice is the strong model; same seat as `builder`, one opinion group via the built-in OpenRouter provider, Sam-approved 2026-09-08 while codex is BLOCKED). `openrouter/<id>` slugs work inside opencode when `OPENROUTER_API_KEY` is exported — that is how a paid model keeps file access. Drift check: `opencode models | grep -- -free`; landscape: `scripts/model-landscape.sh`.
@@ -137,8 +137,8 @@ parallelize freely. Ask what a seat *holds*, not what it costs, when deciding wh
 ### Minis (Echo/Vector/Nexus/Specter/Forge/Titan)
 - `dispatch-manager.sh mini-<name> "task"` → `dispatch-mini.sh` (OpenRouter free primary; every mini stays free-only).
 - Gated single mini: `org-dispatch-gated.sh dispatch lane-mini-<name> <prompt-file>` (HTTP via `agents/scripts/lane-dispatch.py --lane mini-<name>` — provider base_url + auth_env + id all from the registry lane; exit 5 when the reply is capped at max_tokens, because a capped reply has no terminal VERDICT). `nim-<name>` / `nim-all` still work as DEPRECATED aliases and print a warning; `nim-dispatch.py` refuses to run (its second model map is what sent Titan to a dead NVIDIA id, 2026-09-07).
-- **Before promoting or swapping ANY model (Sam 2026-09-08):** WebSearch the provider's current list → read the live catalogue (`scripts/model-landscape.sh` prints `opencode models`, OpenRouter `/api/v1/models`, `agy models`) → `scripts/verify-model.sh <provider> <id>` → only then edit `free-models.json` → `scripts/probe-lane.sh <lane> --record` → `node scripts/refresh-claude-md.mjs`. Ids are never typed from memory. Lane names, never model ids, in briefs/skills/PRs.
-- Direct NIM API (bulk, 189+ models, OpenAI-compatible): `https://integrate.api.nvidia.com/v1/chat/completions`, env `NVIDIA_API_KEY` (NOT NVIDIA_NIM_API_KEY). Batch helper: `~/Tools/SKILLS/org/scripts/nvidia-batch.sh`. NIM 404 = stale model ID → `curl /v1/models`, fix the JSON.
+- **Before promoting or swapping ANY model:** WebSearch the provider's current list → read the live catalogue (`scripts/model-landscape.sh` prints `opencode models`, OpenRouter `/api/v1/models`, `agy models`) → `scripts/verify-model.sh <provider> <id>` → only then edit `free-models.json` → `scripts/probe-lane.sh <lane> --record` → `node scripts/refresh-claude-md.mjs`. Ids are never typed from memory. Lane names, never model ids, in briefs/skills/PRs.
+- Direct NIM API (bulk, 189+ models, OpenAI-compatible): `https://integrate.api.nvidia.com/v1/chat/completions`, env `NVIDIA_API_KEY` (NOT NVIDIA_NIM_API_KEY). The old batch helper `org/scripts/nvidia-batch.sh` is archived (2026-09-24); use a registry lane. NIM 404 = stale model ID → `curl /v1/models`, fix the JSON.
 - Minis are text-only (no filesystem). Don't give them deep reasoning, architecture, or taste-dependent work.
 - Known-flaky: Specter near-empty outputs (~150B), Titan timeouts — treat their silence as abstention, not consensus.
 
@@ -172,9 +172,9 @@ parallelize freely. Ask what a seat *holds*, not what it costs, when deciding wh
 
 ## Scripts inventory
 
-- `~/claudeking.cloud/agents/scripts/`: `dispatch-manager.sh` (front door), `org-dispatch-gated.sh` (gate + brief + lifecycle), `lane-dispatch.py` (any OpenAI-compatible lane by name), `adapter-run.sh` (CLI shapes), `dispatch-mini.sh`, `nim-dispatch.py` (DEPRECATED, refuses to run), `extract-verdict.sh`, `gideon-sync-write.sh`, `atlas-sync-write.sh`, `stale-task-sweep.sh`.
-- `~/Tools/SKILLS/21-cli-orchestration/`: `dispatch-antigravity.sh`, `dispatch-neo.sh`, `dispatch-cerebras.sh`, `dispatch-claude.sh`, `dispatch-atlas.sh` (legacy shim → antigravity) — script home only.
-- `~/Tools/SKILLS/org/scripts/`: `nvidia-batch.sh` (bulk NIM).
+- `~/Sync/tools/agents/scripts/`: `dispatch-manager.sh` (front door), `org-dispatch-gated.sh` (gate + brief + lifecycle), `lane-dispatch.py` (any OpenAI-compatible lane by name), `adapter-run.sh` (CLI shapes), `dispatch-mini.sh`, `nim-dispatch.py` (DEPRECATED, refuses to run), `extract-verdict.sh`, `gideon-sync-write.sh`, `atlas-sync-write.sh`, `stale-task-sweep.sh`.
+- `~/Sync/skills/21-cli-orchestration/`: `dispatch-antigravity.sh`, `dispatch-neo.sh`, `dispatch-cerebras.sh`, `dispatch-claude.sh`, `dispatch-atlas.sh` (legacy shim → antigravity) — script home only.
+- `~/Sync/skills/org/scripts/`: `nvidia-batch.sh` (archived stub; exits 2 and names the lane to use).
 
 ## Workspace layout: one seat home, two aliases (corrected 2026-09-16)
 - `/Users/Shared/Agents/{Gideon,Atlas,Neo}` are the REAL seat homes — deliberately outside `~` (which is itself a git
@@ -185,4 +185,4 @@ parallelize freely. Ask what a seat *holds*, not what it costs, when deciding wh
 
 ## Absorbed command shims (2026-07-08)
 
-`dispatch-cli.md` and `gideon.md` (project `.claude/commands/`) were archived to `~/.claude/commands-archive/dedupe-2026-07-08/` — this skill is the single front door. For pre-merge verification (Koda + Gideon + Atlas review of a branch/PR), use the separate **org-review** skill.
+`dispatch-cli.md` and `gideon.md` (project `.claude/commands/`) were archived to `~/.claude/commands-archive/dedupe-2026-07-08/` — this skill is the single front door. For pre-merge verification (Claude Code + Gideon + Atlas review of a branch/PR), use the separate **org-review** skill.
