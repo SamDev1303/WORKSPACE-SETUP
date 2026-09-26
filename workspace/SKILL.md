@@ -9,9 +9,8 @@ metadata:
 # /workspace — walk into any workspace the same way, on any CLI
 
 One skill, six modes, one rule: **read the markdowns first, repair on entry, then work inside the four beats**
-(Isolate → Build → Prove → Ship). Sam 2026-09-16: *"This is our main skill to walk into, walk inside, any workspace,
-any folder, any repo — starting a project, ending a project, starting a new feature, working on an app, working on a
-website, working on anything."*
+(Isolate → Build → Prove → Ship). The global rules are `~/Sync/AGENTS.md`; this skill is how every CLI applies them on
+the way into a folder, repo or project.
 
 ```
 /workspace enter [path]     repair-on-entry + read the markdowns + structure check + what is in flight
@@ -22,23 +21,26 @@ website, working on anything."*
 /workspace end              close out: hygiene, STATE, plan pointer, session close
 ```
 
-The engine is the Koda runtime (`$KODA_ENGINE`, default `~/claudeking.cloud`); `org/INSTALL.md` explains how a machine
+The engine is the shared tools tree (`$ORG_ENGINE`, default `~/Sync/tools`); `org/INSTALL.md` explains how a machine
 gets it. Every command below is a plain shell line, so codex, opencode, agy, grok and kimi run the same steps Claude does.
 
 ## enter — the beat before any other beat
 
 1. **Go there.** `cd <path>` (default: the current directory). Every later command runs with that cwd.
-2. **Read the markdowns before the files** (HARD RULE, Sam 2026-09-02). At the workspace root and in the directory
+2. **Read the markdowns before the files** (hard rule). At the workspace root and in the directory
    you are working in: `README.md`, `AGENTS.md`, `STRUCTURE.md`, `PLAN.md`, `STATE.md`, `LESSONS.md`,
    `NOTES.md` — whichever exist. The convention you are about to invent is usually written one file up.
-3. **Repair on entry.** `bash "${KODA_ENGINE:-"$HOME/claudeking.cloud"}/scripts/bootstrap-workspace.sh" "$PWD" --lifecycle auto`
-   ensures `AGENTS.md` (the only rules file, with the canonical workflow block — it never creates a CLAUDE.md), `STRUCTURE.md` (regenerated when stale or from
-   another worktree), `PLAN.md`, `STATE.md` with freshness stamps, and `.planning/` with `CURRENT-PLAN.md`.
+3. **Repair on entry.** `bash "${ORG_ENGINE:-"$HOME/Sync/tools"}/scripts/bootstrap-workspace.sh" "$PWD" --lifecycle auto`
+   ensures `AGENTS.md` (the only rules file: a new one is `# <name>` plus the two-line pointer to `~/Sync/AGENTS.md`;
+   it never creates a CLAUDE.md), `STRUCTURE.md` (regenerated when stale or
+   from another worktree), `PLAN.md`, `STATE.md` with freshness stamps, and the `.planning/` layout the global rules
+   name: `PROJECT.md` (Goal, Users, Constraints, Done means, Out of scope), `CURRENT-PLAN.md`, `plans/` and `reviews/`.
+   The checklist lifecycle writes `PROJECT.md`; under GSD, `/gsd-new-project` writes it.
    `--lifecycle auto` uses GSD when the plugin is installed, otherwise the pack's own checklist (see `references/checklist.md`).
    Leaving a workspace staler than you found it is a failure.
-4. **Check the structure.** `bash "${KODA_ENGINE:-"$HOME/claudeking.cloud"}/scripts/check-workspace-structure.sh" "$PWD"`
-   prints one line: ✓/✗ per item (AGENTS.md block at the source hash and the four structure essences, no CLAUDE.md,
-   fresh STRUCTURE.md, CURRENT-PLAN.md, the pack skills on both skill surfaces). Fix a ✗ by re-running
+4. **Check the structure.** `bash "${ORG_ENGINE:-"$HOME/Sync/tools"}/scripts/check-workspace-structure.sh" "$PWD"`
+   prints one line: ✓/✗ per item (AGENTS.md points at `~/Sync/AGENTS.md` and carries no copied workflow block, no
+   CLAUDE.md, fresh STRUCTURE.md, CURRENT-PLAN.md, the pack skills on both skill surfaces). Fix a ✗ by re-running
    bootstrap, never by editing the check.
 5. **What is in flight.** Read `.planning/CURRENT-PLAN.md` (path · goal · phase). Scope check: `gh pr list`,
    `git status --short`, `git worktree list` — overlap with open work means stop and ask.
@@ -49,11 +51,12 @@ gets it. Every command below is a plain shell line, so codex, opencode, agy, gro
 
 1. `mkdir -p <path> && cd <path> && git init -q` (skip init when a repo exists); `git remote add origin …` when known.
 2. `/workspace enter` (bootstrap writes the scaffold; on a new dir it also seeds `README.md`).
-3. Lifecycle: with GSD present, `/gsd-new-project`; without it, the checklist writes `.planning/PROJECT.md` (goal,
-   users, constraints, done-means) and `STATE.md` (phase, next step, blockers) from `references/checklist.md`.
+3. Lifecycle: with GSD present, `/gsd-new-project`; without it, the checklist writes `.planning/PROJECT.md` (Goal,
+   Users, Constraints, Done means, Out of scope) and `STATE.md` (phase, next step, blockers) from `references/checklist.md`.
 4. First plan → `.planning/plans/YYYY-MM-DD-<slug>.md`, pointed by `CURRENT-PLAN.md`
    (`scripts/plan-pointer.sh <plan> --workspace <path>`). A plan that lives only in a CLI's private folder is invisible.
-5. Koda-run projects also get a Linear project (team MYK) before the first dispatch.
+5. Projects tracked in Linear get a Linear project (team `MYK` by default) before the first dispatch.
+6. Review records go in `.planning/reviews/`.
 
 ## feature — the four beats, every time
 
@@ -64,7 +67,7 @@ gets it. Every command below is a plain shell line, so codex, opencode, agy, gro
    reproducing, the *after* once fixed; one assertion per state change; `untested` with a reason, never silent; name the
    exact commit. Headless here: scripted screenshots, probes, measured numbers, output pairs.
 4. **Ship — `/before-and-after`, then `/org loop`** until 5/5 with zero open findings. `/unslop` over the PR title and
-   body. Only Astra (lane `builder`) and Koda build or merge; every other seat reviews. Present the PR URL.
+   body. Only Astra (lane `builder`) and Claude Code build or merge; every other seat reviews. Present the PR URL.
    **Without the engine** (a pack-only install, `org/INSTALL.md`): Ship is the repo's own PR review — open the PR with the
    before/after proof, run the repo's checks in CI, and get one human or agent review before merge; `/org loop` needs the engine.
 
@@ -88,8 +91,7 @@ gets it. Every command below is a plain shell line, so codex, opencode, agy, gro
    `git -C <worktree> ls-files --others --ignored --exclude-standard` names them; commit, move or copy them out first.
    A review record that existed only as an ignored file inside a worktree has been destroyed exactly this way.
 4. Lessons: append to the workspace `LESSONS.md` / the skill's `NOTES.md`; app work → `~/app-builder` when present.
-5. Koda sessions: `/donefortheday` (Linear session issue, daily log, memory). Other seats and pack-only installs: the
-   Handover Brief (what changed · how it was verified · what is open) in the PR body or `STATE.md`.
+5. Close with the Handover Brief (what changed · how it was verified · what is open) in the PR body or `STATE.md`.
 
 ## Rules that hold in every mode
 
@@ -99,9 +101,9 @@ gets it. Every command below is a plain shell line, so codex, opencode, agy, gro
 - A plan lives in the workspace (`.planning/`), never only in a CLI's private plan folder.
 - When a step is blocked, say what was tried and what is blocked; do not skip to the next mode.
 
-Optional companions (Koda's skills repo, not part of this pack): `app-builder`, `website-design`, `vercel-deploy`,
-`cloudflare-deploy`, `workspace-hygiene`, `workspace-deep-clean`, `session-close` (`/donefortheday`). Every mode works
+Optional companions (the skills repo at `~/Sync/skills`, not part of this pack): `app-builder`, `website-design`, `vercel-deploy`,
+`cloudflare-deploy`, `workspace-hygiene`, `workspace-deep-clean`. Every mode works
 without them; they add depth when present.
 
-References: `references/checklist.md` (the non-GSD lifecycle) · `~/Tools/SKILLS/references/WORKFLOW.md` (the canonical
-block every AGENTS.md carries) · `org/INSTALL.md` (the engine).
+References: `references/checklist.md` (the non-GSD lifecycle) · `~/Sync/AGENTS.md` (the global rules, mirrored verbatim at
+`~/Sync/skills/references/WORKFLOW.md` and at the pack root) · `org/INSTALL.md` (the engine).

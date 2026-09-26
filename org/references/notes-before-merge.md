@@ -56,22 +56,22 @@
 
 ## 2026-04-10 — Architecture rebuild dispatch (major update)
 
-**Dispatched:** All 10 agents with ≤500-word 4-question structure (risks / architecture / needs / Koda-is-wrong). Round 2 followup went to Haiku (3rd-party review) + Gideon/Atlas/Neo (Paperclip/OpenClaw/Pi deep-dive).
+**Dispatched:** All 10 agents with ≤500-word 4-question structure (risks / architecture / needs / orchestrator-is-wrong). Round 2 followup went to Haiku (3rd-party review) + Gideon/Atlas/Neo (Paperclip/OpenClaw/Pi deep-dive).
 
 ### Root cause of every dispatch failure this session
 
-Koda skipped Step 0.5 (pre-flight). Not because the rule was unclear. Because the rule was **prose text competing with action for the same attention slot**. Gideon's diagnosis (see `~/Agents/Gideon/drafts/koda-rule-skipping-rootcause-2026-04-10.md`): "Koda does not need more reminders. Koda needs a locked door."
+The orchestrator skipped Step 0.5 (pre-flight). Not because the rule was unclear. Because the rule was **prose text competing with action for the same attention slot**. Gideon's diagnosis (a root-cause draft in `~/Agents/Gideon/drafts/`, 2026-04-10): "The orchestrator does not need more reminders. It needs a locked door."
 
 **Structural fix built:** `org/scripts/org-dispatch-gated.sh` — a required entrypoint that runs pre-flight and writes `org/tmp/preflight.json`. The skill refuses to dispatch unless a fresh (≤10 min old) passing artifact exists. Converts "remember Context7" into "dispatch is physically impossible without proof."
 
 ### Agent-specific lessons captured in SKILL.md
 
-- **Gideon (Codex) sandbox:** marks `claudeking.cloud` non-writable. Write to `drafts/` and Koda copies out. OR launch codex from claudeking.cloud cwd.
+- **Gideon (Codex) sandbox:** marks the engine checkout non-writable. Write to `drafts/` and the orchestrator copies out. OR launch codex from the engine checkout as cwd.
 - **Atlas (Gemini) sandbox:** jails to `~/Agents/Atlas/`. Use `--include-directories` to expand reads. Stage files in `workspace/inbox/`, write to `workspace/outbox/`.
 - **Atlas proactive writes:** Gemini in yolo mode has been observed writing files the prompt didn't ask for (wrote a SYNTHESIS.md unprompted). Constrain target paths explicitly.
 - **Nexus (`gemma-4-31b-it`):** flaky. Hangs NIM endpoint 30% of the time. Fallback: `gemma-3-27b-it` via direct curl.
 - **Gemini 429:** free-tier rate limit. Wait ≥75s before retry.
-- **Neo skill symlink:** `~/Agents/Neo/skills` → `~/.claude/skills/` (not `~/Tools/SKILLS/`). Potentially stale. Flag to user when a task depends on a recent skill.
+- **Neo skill symlink:** `~/Agents/Neo/skills` → `~/.claude/skills/` (not `~/Sync/skills/`). Potentially stale. Flag to user when a task depends on a recent skill.
 
 ### Response format that worked (steal this for future dispatches)
 
@@ -99,9 +99,9 @@ Unknown (pre-2026-03-28, established as org protocol)
 ## What Works
 - Direct synchronous dispatch: `cd ~/Agents/Gideon && codex exec "Read GIDEON.md then: [TASK]"`
 - Background async dispatch via run_in_background
-- Handoff via drafts directory (koda-task-DATE.md / koda-handoff-DATE.md)
+- Handoff via drafts directory (task-DATE.md / handoff-DATE.md)
 - One-way Telegram notifications: `node ~/Agents/Gideon/scripts/gideon.mjs notify "..."`
-- Gideon commands: hi, donefortheday, ask, review, status, recall, handoff-koda, doctor, notify
+- Gideon commands: hi, donefortheday, ask, review, status, recall, handoff, doctor, notify
 - Heartbeat check via workspace/runtime/HEARTBEAT.md
 - Code review and second opinion use cases
 - YouTube pipeline execution
@@ -109,18 +109,18 @@ Unknown (pre-2026-03-28, established as org protocol)
 
 ## What Doesn't Work
 - Gideon cannot use Claude Code tools (Telegram plugin, MCP servers, memory API)
-- Gideon cannot access Koda's session context or CLAUDE.md routing
+- Gideon cannot access the Claude Code session context or CLAUDE.md routing
 - Exchange limited to ~/Agents/Gideon/drafts/ only
 
 ## Dependencies
-- Codex CLI (gpt-5.5) — Gideon's brain (Sam directive 2026-05-05: gpt-5.5 ONLY)
+- Codex CLI (gpt-5.5) — Gideon's brain (gpt-5.5 only)
 - Gideon workspace at ~/Agents/Gideon/
 - GIDEON.md in Gideon workspace (context file)
 - ~/Agents/Gideon/scripts/gideon.mjs (notification script)
-- Gideon is READ-ONLY on ~/Tools/SKILLS/ and ~/api/
+- Gideon is READ-ONLY on ~/Sync/skills/ and ~/api/
 
 ## Future
-- Bidirectional handoff protocol (currently Koda pushes, Gideon returns via drafts)
+- Bidirectional handoff protocol (currently the orchestrator pushes, Gideon returns via drafts)
 - Structured task queue instead of file-based handoffs
 - Auto-dispatch for specific task types (e.g., all code reviews to Gideon)
 
@@ -228,8 +228,7 @@ is also fragile — prefer the heredoc stdin form documented in SKILL.md Method 
 - qwen3.5-397b, deepseek-v3.2, minimax-m2.5, kimi-k2.5, glm5, gpt-oss-120b/20b, gemma-3-4b
 
 ### Scripts
-- `scripts/nvidia-batch.sh` — 5 modes: social, email, review, extract, summarize
-- Output goes to `claudeking/nvidia-output/`
+- `scripts/nvidia-batch.sh` — ARCHIVED 2026-09-24 (hardcoded model, bypassed the model gate); now a stub that exits 2. Original in `_archive/dead-dispatchers-20260924/`.
 
 ### Lessons
 - **Model IDs get versioned suffixes** — `mistral-large-3-675b` → `mistral-large-3-675b-instruct-2512`. Always verify via `/v1/models` before batch jobs.
@@ -239,7 +238,7 @@ is also fragile — prefer the heredoc stdin form documented in SKILL.md Method 
 - Embedding endpoint uses /v1/embeddings not /v1/chat/completions
 
 ### 2026-03-23: NIM as Website Feature (AI Calculator)
-**Use case:** Built an AI-powered ROI calculator on claudeking.org. Users input business numbers → client-side math gives instant results → optional "Get AI Analysis" button calls NIM for personalized summary.
+**Use case:** Built an AI-powered ROI calculator on the org's public website. Users input business numbers → client-side math gives instant results → optional "Get AI Analysis" button calls NIM for personalized summary.
 
 **Model used:** `meta/llama-3.1-8b-instruct` — fast, free tier, good enough for 3-sentence business summaries.
 
@@ -278,7 +277,7 @@ Client component (React) → fetch("/api/calculator") → Next.js API route → 
 ## from 21-cli-orchestration/NOTES.md
 # CLI Orchestration — Long-Term Memory
 
-> Koda reads this before every cli-orchestration task. Append new learnings after each use.
+> The orchestrator reads this before every cli-orchestration task. Append new learnings after each use.
 
 ## Conventions
 - "Both CLI" = dispatch Codex + Gemini via `run_in_background` simultaneously
@@ -300,7 +299,7 @@ Client component (React) → fetch("/api/calculator") → Next.js API route → 
 
 ## Lessons
 
-### 2026-03-23: Dual-CLI Review of claudeking.org
+### 2026-03-23: Dual-CLI Review of the org website
 **Dispatched both CLIs for website redesign review:**
 - Codex: reviewed for bugs, accessibility, security, missed theme colors
 - Gemini: reviewed for UX, conversion, design consistency, mobile
@@ -328,12 +327,12 @@ Updated Codex CLI dispatch pattern to mandate stdin pipes. Refined the Gemini OA
 - GOTCHA: extract-verdict.sh returns exit 3 (missing) on "VERDICT: GO" — GO not in accepted vocab. Brief agents to use PASS/FLAG/BLOCK or patch the script.
 - GOTCHA: Neo (opencode) auto-rejects external_directory reads — any file a Neo brief references MUST be staged into ~/Agents/Neo/workspace/inbox/ and referenced by workspace-relative path. Two silent no-response failures before root-cause.
 - Preflight 10-min freshness window WILL expire mid-cycle — rerun `org-dispatch-gated.sh preflight` before late dispatches.
-- Linear issue IDs now go in every brief (linear-worklog skill, Sam directive 2026-07-12).
+- Linear issue IDs now go in every brief (linear-worklog skill).
 # org-review — Lessons & Notes
 
 ## Created: 2026-09-09
 
-> Long-term memory for the merge-gate skill. Koda reads this before a review run and appends
+> Long-term memory for the merge-gate skill. The orchestrator reads this before a review run and appends
 > after one. Entries carry their evidence (dates, counts, the measured contrast) so a future
 > reader can tell a learned rule from a guessed one.
 
@@ -478,7 +477,7 @@ class has no space), so a fan-out review dispatched with ZERO model verification
 bare `agents/scripts/role-run.sh` WERE caught, which is why it stayed invisible.
 
 **What changed for this skill:** a fan-out dispatch now requires a fresh LANE probe
-(`scripts/probe-lane.sh`, which writes `~/.cache/koda/c7/lanes` only on a clean pass) AND today's
+(`scripts/probe-lane.sh`, which writes the engine's per-machine lane stamps only on a clean pass) AND today's
 date stamp. A per-seat stamp is no longer enough — a review runs several lanes, so a 4h-old grok
 probe must not authorise an openrouter+opencode review. Expect to run `probe-lane.sh <lane>` before
 a review; that is the intended friction, not a bug.

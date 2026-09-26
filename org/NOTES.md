@@ -2,6 +2,18 @@
 
 What this skill learned in use. Newest first. Append a dated entry after any run that surprised you.
 
+## 2026-09-24 — engine SamDev1303/mykoala-runtime#37: non-counted findings are not markable; cross-exam sees the cited code
+
+- Never mark a finding the loop does not count (ungrounded, suppressed, out-of-scope, repeat). Since engine PR
+  SamDev1303/mykoala-runtime#37, board-merge `set` refuses it, because a mark pulled the finding back into the score,
+  and it stalled three PRs at 4/5 on 2026-09-24. If a non-counted finding names a real problem, fix the code and let
+  the next round judge it.
+- From round 2 on, cross-exam briefs for tool-less seats include the base...HEAD hunks of every file a pending finding
+  cites that the delta doesn't touch, or the file around the cited line. A CANNOT-VERIFY on an untouched file is no
+  longer expected.
+- A VERDICT reason may quote shell (`|| exit 4`). extract-verdict rejects only the template alternation
+  (PASS|FLAG|BLOCK).
+
 ## 2026-09-16 — born from org-dispatch + org-review + greploop + greploop-apps + thanos (Sam: "one skill")
 
 - **The plan's own review proved the seats work when the path is right.** `agy` had died to the pty bridge's 180 s idle
@@ -35,5 +47,5 @@ What this skill learned in use. Newest first. Append a dated entry after any run
 - Deferred (brief 2): triage before ingest, delta-only rounds, confidence pass (<80 → suppressed), repeat guard, rules
   append on refuted claims (agents/board/rules), per-round metrics on BOARD.md.
 - 2026-09-18 01:33 — a brief outside SEAT_CWD is unreadable to the read-only OpenCode seats (auto-rejected Read → no VERDICT,
-  rc 3, 1 minute). The brief must live INSIDE the reviewed checkout without dirtying it: `<checkout>/.git/koda-review-brief.md`
+  rc 3, 1 minute). The brief must live INSIDE the reviewed checkout without dirtying it: a review-brief file under `<checkout>/.git/`
   (inside cwd for the seat, ignored by the tree fingerprint). The loop and plan-review already do this via agents/board/loops.

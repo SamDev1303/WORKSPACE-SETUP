@@ -144,7 +144,7 @@ a mutation FAILS the run) · `lane-review` / `lane-mini-*` (HTTP, tool-less — 
 read a path, so their file:line claims are only as good as the brief). independence is read from the registry's `.opinion_groups`: `grill` and `builder` are the SAME seat (Astra) and count as ONE opinion; `lane-review` (GLM on OpenRouter) and `opencode-paid` (the same GLM inside opencode) are one group too. Two opinions = two groups. Never inline `/Users/...` absolute paths into an opencode brief — cite
 paths relative to `SEAT_CWD`.
 
-**Cheapest lane that can answer the question wins (Sam directive 2026-09-09 — spend).** Order: a model that is
+**Cheapest lane that can answer the question wins (spend).** Order: a model that is
 **free right now** → the `muse` lane (opencode's free muse-spark 1.3 contributor build, 8k output cap — only for work touching no keys or secrets) → `grill` (Astra) / `review` for adversarial or tool-using work.
 Ids and prices come from `scripts/resolve-model.sh <lane>` + a live probe — never from this file.
 The free list is read LIVE per call — `scripts/or-free-models.sh` writes `agents/config/openrouter-free.json` from the
@@ -156,10 +156,10 @@ never quote a price from memory — re-read the catalogue.
 provider. Use it when OpenRouter is unavailable, when the change is not high-risk, or whenever spend matters. It
 carries the same file access and the same fingerprint guard as `grill`.
 
-**Free-first is a GATE now, not advice (Sam 2026-09-14).** Every entry in `agents/config/free-models.json` carries
+**Free-first is a GATE now, not advice.** Every entry in `agents/config/free-models.json` carries
 `cost`: `free` · `subscription` (a flat sub Sam already pays — no per-dispatch charge) · `metered` (real per-token
 money) · `unverified`. The c7 hook **blocks a metered dispatch** unless the command names it as intentional with
-Sam naming the model — `scripts/model-approval.sh grant "model:<id>" "<his words>"` (24 h, per exact id, logged verbatim to `~/.cache/koda/c7/overrides.log`; `show` lists live approvals). An unapproved id exits 6 from `adapter-run.sh`, a class distinct from a FLAG verdict. `# paid-ok:` is retired. So for a review: reach for `lane-grill-free` or `neo` first, and only justify `grill`/`review`
+Sam naming the model — `scripts/model-approval.sh grant "model:<id>" "<his words>"` (24 h, per exact id, logged verbatim to the engine's per-machine overrides log; `show` lists live approvals). An unapproved id exits 6 from `adapter-run.sh`, a class distinct from a FLAG verdict. `# paid-ok:` is retired. So for a review: reach for `lane-grill-free` or `neo` first, and only justify `grill`/`review`
 when the change genuinely needs tool use or adversarial depth — then say so on the command line.
 
 When the gate blocks, it prints the free models that can actually answer, read live. "Zero price" is not "can

@@ -1,14 +1,14 @@
 # Installing the org engine (what `/org` needs beyond this folder)
 
 This skill folder is the **front door**. The loop, the review gate, the dispatcher and the board live in the
-**engine**: the Koda runtime checkout (`github.com/SamDev1303/claudeking.cloud`). Every script under `org/scripts/`
+**engine**: the shared tools tree at `~/Sync/tools`, synced to the mini and the Air. Every script under `org/scripts/`
 is a launcher that execs the same-named file under `<engine>/agents/scripts/`; nothing here duplicates the engine.
 
 ## 1. Where the engine is
 
 | Setting | Default | Override |
 |---|---|---|
-| engine checkout | `$HOME/claudeking.cloud` | `export KODA_ENGINE=/path/to/claudeking.cloud` |
+| engine checkout | `$HOME/Sync/tools` | `export ORG_ENGINE=/path/to/engine` |
 
 A launcher that cannot find its engine script prints the path it looked at and exits 3. It never runs a model.
 
@@ -20,17 +20,16 @@ A launcher that cannot find its engine script prints the path it looked at and e
 - `agents/roles/` — the reviewer brief and the seat lenses.
 - `scripts/resolve-model.sh` · `scripts/model-approval.sh` · `scripts/probe-lane.sh` · `scripts/or-free-models.sh` ·
   `scripts/lib/` — lane resolution, the approval ledger, seat probes, the live free catalogue.
-- `scripts/bootstrap-workspace.sh` · `scripts/check-agents-md.sh` · `scripts/check-workspace-structure.sh` ·
+- `scripts/bootstrap-workspace.sh` · `scripts/check-workspace-structure.sh` ·
   `scripts/plan-pointer.sh` — the workspace half (`/workspace`).
 
-On a second Mac the engine arrives by `scripts/fleet-sync.sh --apply` (one-way, from the operator box); it carries no
-credentials; the approval ledger stays per machine.
+On a second Mac the engine is already there: `~/Sync` is a Syncthing folder shared by the mini and the Air, so `~/Sync/tools` arrives with it (no copy step). `fleet-sync.sh` remains only for the per-machine carriers it still names.
 
 ## 3. What stays per machine (never synced)
 
 - **Seat logins** — `codex login`, `agy`, `opencode auth`, `grok`: each CLI's own auth on that machine.
-- **The approval ledger** (`~/.cache/koda/approvals/`) — Sam's "which model" answers are per machine and expire in 24h.
-- **Context7 stamps** (`~/.cache/koda/c7/`).
+- **The approval ledger** (in the engine's per-machine cache directory) — Sam's "which model" answers are per machine and expire in 24h.
+- **Context7 stamps** (in the same per-machine cache directory).
 
 ## 4. Preflight
 
@@ -40,10 +39,10 @@ bash ~/.agents/skills/org/scripts/preflight.sh
 
 Prints one line per requirement (engine path, registry readable, `resolve-model.sh builder` answers, each seat CLI on
 PATH, both skill surfaces resolve) and exits non-zero on the first miss, naming it. Run it before the first `/org`
-call on a new machine and after every `fleet-sync --apply`.
+call on a new machine and whenever Syncthing has just delivered a tools change.
 
 ## 5. Skill surfaces
 
-The seven-surface rule in `~/Tools/SKILLS/SKILL-FORMAT.md` applies: `~/.claude/skills/org` (Claude Code) and
+The seven-surface rule in `~/Sync/skills/SKILL-FORMAT.md` applies: `~/.claude/skills/org` (Claude Code) and
 `~/.agents/skills/org` (Codex, OpenCode, Antigravity, Kimi, Grok) must both resolve to this folder;
 `scripts/sync-surfaces.sh` in the skills repo makes them.

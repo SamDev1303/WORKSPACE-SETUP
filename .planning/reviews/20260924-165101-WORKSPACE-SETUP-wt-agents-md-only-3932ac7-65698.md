@@ -1,7 +1,7 @@
 # Review digest — org-loop 20260924-165101-WORKSPACE-SETUP-wt-agents-md-only-3932ac7-65698
 <!-- Written by agents/scripts/board-merge.py digest. Regenerated in place each round — never appended to. -->
 
-- repo: `/Users/shamalkrishna/Work/WORKSPACE-SETUP-wt-agents-md-only`
+- repo: `~/Work/WORKSPACE-SETUP-wt-agents-md-only`
 - base: `origin/main` · head: `eff82e679d98`
 - score: **5/5** (production ready) · open 0 · not counted 3
 - score rule that fired: no unresolved findings · every seat PASS both halves · 2 opinion groups
@@ -27,4 +27,4 @@ One line per finding: id · sev · status · file:line · claim
 - r2 · head 024898eabb8e · 4/5 · new 0 · closes 2 · seats z-ai/glm-5.3-flash,deepseek/deepseek-v4.1-flash
 - r3 · head eff82e679d98 · 5/5 · new 0 · closes 1 · seats z-ai/glm-5.3-flash,deepseek/deepseek-v4.1-flash
 
-Board: `/Users/shamalkrishna/.cache/koda/org-loops/20260924-165101-WORKSPACE-SETUP-wt-agents-md-only-3932ac7-65698/BOARD.md` (machine-level state — this digest outlives it).
+Board: `BOARD.md` for loop `20260924-165101-WORKSPACE-SETUP-wt-agents-md-only-3932ac7-65698` in the machine-local org-loops cache (machine-level state — this digest outlives it).

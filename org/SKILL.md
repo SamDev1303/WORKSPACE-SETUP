@@ -2,6 +2,7 @@
 name: org
 description: "THE org skill — dispatch · plan · review · loop, one contract. Use it for ANY multi-agent work: dispatching a task to Gideon/Astra (codex), Atlas (Antigravity agy), Grok, Neo or the free minis; a second opinion or cross-validation; 'org review' / 'is this PR ready to merge' / 'check this branch or diff' (single-pass merge gate); 'org loop' / 'iterate until it scores 5/5' / 'drive the review to PASS' / anything that used to be greploop; and 'org plan' / 'review my plan' / 'find where this plan fails' before a plan reaches Sam. Trigger on /org, /org-dispatch, /org-review, /org-loop, /org-plan, /gideon, 'ask Gideon', 'ask Atlas', 'dispatch to', 'second opinion', 'full org', 'merge gate', 'greploop', 'thanos', 'autonomous loop', 'plan review'. Absorbs org-dispatch, org-review, greploop, greploop-apps and thanos."
 aliases: [org-loop, org-plan]
+permissions: [env, shell]
 metadata:
   version: "2.0.0"
   replaces: [org-dispatch, org-review, greploop, greploop-apps, thanos]
@@ -27,8 +28,8 @@ source of a model id; `scripts/resolve-model.sh <lane>` prints it; a brief, a re
 from each provider's own list (`scripts/check-registry-ids-live.sh`) and the free list is read live per run
 (`scripts/free-models-now.sh` — opencode's `-free` builds ∪ OpenRouter's zero-price catalogue), never remembered.
 
-**Who does what (Sam 2026-09-16).** Only two things build or merge: **Astra** (lane `builder`, codex, the id `resolve-model.sh builder` prints, at
-reasoning `xhigh` — "Extra") and **Koda**. Every other seat reviews, researches or drafts; `org-dispatch-gated.sh`
+**Who does what.** Only two things build or merge: **Astra** (lane `builder`, codex, the id `resolve-model.sh builder` prints, at
+reasoning `xhigh` — "Extra") and **Claude Code** in the session. Every other seat reviews, researches or drafts; `org-dispatch-gated.sh`
 refuses `DISPATCH_MODE=build|merge` to any other lane. The default reviewer set is `grill` (Astra as the adversarial
 voice — same seat as builder, so one opinion) · `gemini` (Antigravity across three paid Google accounts, rotated by
 `agents/scripts/agy-run.sh` on quota) · `grok` (full reviewer; a 429 is a lane state for one round, never a demotion) ·
@@ -58,7 +59,7 @@ strips postambles, normalises the dash and refuses empty/truncated output (rc 3)
 diffs verdicts; zero answering seats is `consensus: NONE` (exit 3), never agreement. Exit precedence 1 BLOCK > 6 not
 approved > 3 no verdict > 2 FLAG > 0 PASS.
 
-**The board.** `agents/board/TASKS.md` is the shared task board every seat reads (prepended to briefs) and Koda writes
+**The board.** `agents/board/TASKS.md` is the shared task board every seat reads (prepended to briefs) and Claude Code writes
 (`org-dispatch-gated.sh board list|add|claim|update|done`, serialised by a lock, every mutation appended to
 `agents/board/history/`); a seat claims a task by writing `CLAIM <id>` in its answer — the collector applies it. Each loop
 keeps its own `agents/board/loops/<loop-id>/BOARD.md`.
@@ -68,7 +69,7 @@ keeps its own `agents/board/loops/<loop-id>/BOARD.md`.
 Two doors. Quick: `agents/scripts/dispatch-manager.sh <gideon|atlas|neo|grok|mini-*> "task"` (routes through
 `role-run.sh` → `adapter-run.sh`). Gated: `agents/scripts/org-dispatch-gated.sh preflight` then
 `dispatch <gideon|atlas|neo|grill|lane-<name>> <brief>` — canonical Handover Brief, run id, no-mutation rule, VERDICT
-contract, artefacts under `$KODA_DISPATCH_CACHE/<run-id>` when the brief sits inside `SEAT_CWD`, verdict parsed by
+contract, artefacts under the engine's dispatch cache (`<dispatch-cache>/<run-id>`) when the brief sits inside `SEAT_CWD`, verdict parsed by
 `agents/scripts/extract-verdict.sh` (0 pass / 1 BLOCK / 2 FLAG / 3 missing = BLOCK). A refusal to dispatch exits 2 and
 writes nothing — delete the previous run's answer before re-dispatching so a stale file is never read as this run's.
 Never run two seats of the same CLI at once (opencode's SQLite mutex, codex's single instance). Read
@@ -76,7 +77,7 @@ Never run two seats of the same CLI at once (opencode's SQLite mutex, codex's si
 
 ## Mode: plan — `/org plan <plan-file>`
 
-No plan reaches Sam reviewed once. Write the plan (koda-plan's GSD/superpowers flow), then
+No plan reaches Sam reviewed once. Write the plan (the GSD/superpowers flow), then
 `agents/scripts/plan-review.sh <plan> --models <reviewer ids>` sends the adversarial brief ("find where this FAILS") to
 the reviewer set in parallel; objections are merged onto a plan board (same finding format, findings are objections),
 folded into the plan, and the review re-run — at most two rounds. Unresolved P0/P1 after round two → the plan is **not
@@ -110,7 +111,7 @@ Step-by-step: `references/review.md`.
 5. **Score** (deterministic, first rule wins — full table in `references/loop.md`): seat silent/mutated → **0** ·
    ≥2 open P0 → **1** · 1 open P0 or ≥2 open P1 → **2** · 1 open P1 or any unconfirmed P0/P1 → **3** · only P2 open, or a
    FLAG with zero findings, or only one opinion group answered → **4** · none open, every seat PASS, ≥2 groups → **5**.
-6. **Fix** — the fixer is **Koda in the session** (or, with `--autonomous`, the builder lane in `DISPATCH_MODE=build`, the
+6. **Fix** — the fixer is **Claude Code in the session** (or, with `--autonomous`, the builder lane in `DISPATCH_MODE=build`, the
    thanos loop folded in). The fixer may only mark `fixed-pending`, `refuted-pending` (with evidence) or
    `wontfix-pending` (with a reason) via `board-merge.py set`; **a close needs a reviewer's AGREE in the next round**, and a
    finding re-reported after "fixed" reopens. Reply on the board (and the PR) with what was done.
@@ -129,7 +130,7 @@ resolved by lane **once** and pinned for the run (each granted for 24 h from Sam
 `scripts/test-org-loop.sh` (every score row, same-group cap, silent seat, extractor, close-needs-AGREE, PR edit-not-dup,
 `--max-rounds`).
 
-## Scripts (runtime repo, `~/claudeking.cloud`)
+## Scripts (engine, `~/Sync/tools`)
 
 | Script | Role |
 |---|---|
@@ -145,5 +146,5 @@ resolved by lane **once** and pinned for the run (each granted for 24 h from Sam
 ## Related skills
 
 `new-feature` (isolate) → `code-structure` (build) → `evidence-driven-testing` (prove) → `before-and-after` + `/org review`
-(ship; `/org loop` drives a FLAG to PASS). `koda-plan` writes plans; `/org plan` reviews them. `session-start` reads
-`agents/board/TASKS.md`; `session-close` snapshots it.
+(ship; `/org loop` drives a FLAG to PASS). GSD/superpowers planning writes plans; `/org plan` reviews them. Read
+`agents/board/TASKS.md` at the start of a session.

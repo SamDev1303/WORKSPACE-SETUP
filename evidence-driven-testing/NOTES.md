@@ -2,7 +2,7 @@
 
 ## Provenance
 - Imported 2026-07-15 from github.com/michaelshimeles/skills (v1.0, generic).
-- v2.0-koda: adapted to Koda stack — Comet-only web, idb/simctl for iOS sim, workspace-rooted artifacts, gh + Linear MYK + Telegram posting, commit-pin + secret-scan guardrails.
+- v2.0: adapted to this org's stack — Comet-only web, idb/simctl for iOS sim, workspace-rooted artifacts, gh + Linear MYK + Telegram posting, commit-pin + secret-scan guardrails.
 
 ## Conventions
 - Evidence dir: `<project>/.planning/evidence/<YYYY-MM-DD>-<topic>/`
@@ -12,9 +12,9 @@
 ## Known issues / lessons
 - iOS sim ignores ALL macOS synthetic input — idb HID only (see ios-sim-testing).
 - `simctl recordVideo` must be stopped with SIGINT (`kill -INT`), not SIGKILL, or the mp4 is corrupt.
-- 2026-07-16 first live run (back-to-top button, claudeking.cloud site): headless Playwright has no screen to record — per-assertion screenshots + ffmpeg slideshow (`-framerate 0.7`, glob PNGs) is the working evidence-video recipe for headless web. gif_creator needs the Chrome extension session.
+- 2026-07-16 first live run (back-to-top button, the old engine repo's site): headless Playwright has no screen to record — per-assertion screenshots + ffmpeg slideshow (`-framerate 0.7`, glob PNGs) is the working evidence-video recipe for headless web. gif_creator needs the Chrome extension session.
 - ffmpeg (homebrew-ffmpeg tap) breaks after brew cleanup removes dylib deps (libass/srt/x264/...). Fix: loop `ffmpeg -version` → `brew install <missing>` until clean; `brew reinstall ffmpeg` blocked by untrusted-tap gate.
-- claudeking.cloud gitignores `.planning/` — evidence artifacts there stay local; post the video to PR/Linear/Telegram for durability.
+- The old engine repo gitignored `.planning/` — evidence artifacts there stay local; post the video to PR/Linear/Telegram for durability.
 
 ## 2026-09-13 — three ways a green gate sits over a live defect
 
