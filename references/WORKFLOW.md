@@ -138,7 +138,7 @@ The `tailscale` CLI is installed on both Macs; use it whenever you need another 
 
 ## Working from the Air
 
-`~/Sync` is the same on both Macs: rules, lessons, secrets, skills and tools need nothing extra on the Air. Project checkouts live on the mini under `~/Work`; the Air's own `~/Work` is a different tree. From the Air, work on a mini project directly over Tailscale: `ssh -t mini 'cd ~/Work/<project> && zsh -lic koda'` (the `mini` host is in the Air's `~/.ssh/config`; git, builds and simulators run on the mini). To edit a project locally on the Air as well, share that one project with `~/Sync/tools/scripts/share-project.sh <project>` (run on the mini): its working tree then syncs both ways under `~/Work/<project>` on both Macs, `.git` stays on the mini, and commits are made on the mini. Never put a whole `~/Work` or any `.git` directory into a Syncthing folder.
+`~/Sync` is the same on both Macs: rules, lessons, secrets, skills and tools need nothing extra on the Air. Syncthing carries `~/Sync` only; GitHub carries code. App repos are ordinary clones on the Air at the mini's paths (`~/Work/AppHeaven/A-tier/Falah/mobile-app`, `A-tier/Falah/website`, `A-tier/TakeABreak/mobile-app`; clone others there on request), so on the Air you work in the clone like on the mini: branch, commit, push, and pull the mini's pushes. For builds and simulators use the mini over Tailscale: `ssh -t mini 'cd ~/Work/<project> && zsh -lic koda'` (the `mini` host is in the Air's `~/.ssh/config`). `~/Sync/tools/scripts/share-project.sh <folder>` (run on the mini) is only for a folder that is not a git repo; never put a git repo, a whole `~/Work`, or any `.git` directory into a Syncthing folder.
 
 ## Workspace-specific instructions
 

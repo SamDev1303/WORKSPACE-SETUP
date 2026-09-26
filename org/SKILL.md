@@ -146,5 +146,5 @@ resolved by lane **once** and pinned for the run (each granted for 24 h from Sam
 ## Related skills
 
 `new-feature` (isolate) → `code-structure` (build) → `evidence-driven-testing` (prove) → `before-and-after` + `/org review`
-(ship; `/org loop` drives a FLAG to PASS). GSD (`/gsd-plan-phase`) writes plans; `/org plan` reviews them. `session-start` reads
-`agents/board/TASKS.md`; `session-close` snapshots it.
+(ship; `/org loop` drives a FLAG to PASS). GSD/superpowers planning writes plans; `/org plan` reviews them. Read
+`agents/board/TASKS.md` at the start of a session.

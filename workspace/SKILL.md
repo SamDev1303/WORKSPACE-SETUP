@@ -91,8 +91,7 @@ gets it. Every command below is a plain shell line, so codex, opencode, agy, gro
    `git -C <worktree> ls-files --others --ignored --exclude-standard` names them; commit, move or copy them out first.
    A review record that existed only as an ignored file inside a worktree has been destroyed exactly this way.
 4. Lessons: append to the workspace `LESSONS.md` / the skill's `NOTES.md`; app work → `~/app-builder` when present.
-5. Claude Code sessions: `/donefortheday` (Linear session issue, daily log, memory). Other seats and pack-only installs: the
-   Handover Brief (what changed · how it was verified · what is open) in the PR body or `STATE.md`.
+5. Close with the Handover Brief (what changed · how it was verified · what is open) in the PR body or `STATE.md`.
 
 ## Rules that hold in every mode
 
@@ -103,8 +102,8 @@ gets it. Every command below is a plain shell line, so codex, opencode, agy, gro
 - When a step is blocked, say what was tried and what is blocked; do not skip to the next mode.
 
 Optional companions (the skills repo at `~/Sync/skills`, not part of this pack): `app-builder`, `website-design`, `vercel-deploy`,
-`cloudflare-deploy`, `workspace-hygiene`, `workspace-deep-clean`, `session-close` (`/donefortheday`). Every mode works
+`cloudflare-deploy`, `workspace-hygiene`, `workspace-deep-clean`. Every mode works
 without them; they add depth when present.
 
-References: `references/checklist.md` (the non-GSD lifecycle) · `~/Sync/AGENTS.md` (the global rules, mirrored in
-`references/WORKFLOW.md`) · `org/INSTALL.md` (the engine).
+References: `references/checklist.md` (the non-GSD lifecycle) · `~/Sync/AGENTS.md` (the global rules, mirrored verbatim at
+`~/Sync/skills/references/WORKFLOW.md` and at the pack root) · `org/INSTALL.md` (the engine).

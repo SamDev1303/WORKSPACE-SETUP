@@ -20,7 +20,7 @@ A launcher that cannot find its engine script prints the path it looked at and e
 - `agents/roles/` — the reviewer brief and the seat lenses.
 - `scripts/resolve-model.sh` · `scripts/model-approval.sh` · `scripts/probe-lane.sh` · `scripts/or-free-models.sh` ·
   `scripts/lib/` — lane resolution, the approval ledger, seat probes, the live free catalogue.
-- `scripts/bootstrap-workspace.sh` · `scripts/check-agents-md.sh` · `scripts/check-workspace-structure.sh` ·
+- `scripts/bootstrap-workspace.sh` · `scripts/check-workspace-structure.sh` ·
   `scripts/plan-pointer.sh` — the workspace half (`/workspace`).
 
 On a second Mac the engine arrives by `scripts/fleet-sync.sh --apply` (one-way, from the operator box); it carries no

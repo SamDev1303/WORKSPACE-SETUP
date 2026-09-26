@@ -10,7 +10,7 @@ for s in org-loop.sh plan-review.sh role-run.sh org-dispatch-gated.sh board-merg
 done
 REG="$E/agents/config/free-models.json"
 python3 -c 'import json,sys; json.load(open(sys.argv[1]))' "$REG" 2>/dev/null && say "✓" "registry readable: $REG" || say "✗" "registry unreadable: $REG"
-for s in resolve-model.sh model-approval.sh probe-lane.sh or-free-models.sh opencode-free-models.sh bootstrap-workspace.sh check-agents-md.sh check-workspace-structure.sh plan-pointer.sh; do
+for s in resolve-model.sh model-approval.sh probe-lane.sh or-free-models.sh opencode-free-models.sh bootstrap-workspace.sh check-workspace-structure.sh plan-pointer.sh; do
   [ -f "$E/scripts/$s" ] && say "✓" "runtime script $s" || say "✗" "runtime script $s missing"
 done
 b="$(bash "$E/scripts/resolve-model.sh" builder 2>/dev/null)" && [ -n "$b" ] && say "✓" "resolve-model.sh builder → $b" || say "✗" "resolve-model.sh builder does not resolve"
