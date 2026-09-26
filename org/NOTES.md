@@ -2,10 +2,10 @@
 
 What this skill learned in use. Newest first. Append a dated entry after any run that surprised you.
 
-## 2026-09-24 — engine SamDev1303/Sync/tools#37: non-counted findings are not markable; cross-exam sees the cited code
+## 2026-09-24 — engine SamDev1303/mykoala-runtime#37: non-counted findings are not markable; cross-exam sees the cited code
 
 - Never mark a finding the loop does not count (ungrounded, suppressed, out-of-scope, repeat). Since engine PR
-  SamDev1303/Sync/tools#37, board-merge `set` refuses it, because a mark pulled the finding back into the score,
+  SamDev1303/mykoala-runtime#37, board-merge `set` refuses it, because a mark pulled the finding back into the score,
   and it stalled three PRs at 4/5 on 2026-09-24. If a non-counted finding names a real problem, fix the code and let
   the next round judge it.
 - From round 2 on, cross-exam briefs for tool-less seats include the base...HEAD hunks of every file a pending finding

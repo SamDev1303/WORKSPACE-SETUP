@@ -228,8 +228,7 @@ is also fragile — prefer the heredoc stdin form documented in SKILL.md Method 
 - qwen3.5-397b, deepseek-v3.2, minimax-m2.5, kimi-k2.5, glm5, gpt-oss-120b/20b, gemma-3-4b
 
 ### Scripts
-- `scripts/nvidia-batch.sh` — 5 modes: social, email, review, extract, summarize
-- Output went to `nvidia-output/` under the engine (the script is archived since 2026-09-24)
+- `scripts/nvidia-batch.sh` — ARCHIVED 2026-09-24 (hardcoded model, bypassed the model gate); now a stub that exits 2. Original in `_archive/dead-dispatchers-20260924/`.
 
 ### Lessons
 - **Model IDs get versioned suffixes** — `mistral-large-3-675b` → `mistral-large-3-675b-instruct-2512`. Always verify via `/v1/models` before batch jobs.

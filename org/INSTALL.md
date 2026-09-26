@@ -23,8 +23,7 @@ A launcher that cannot find its engine script prints the path it looked at and e
 - `scripts/bootstrap-workspace.sh` · `scripts/check-workspace-structure.sh` ·
   `scripts/plan-pointer.sh` — the workspace half (`/workspace`).
 
-On a second Mac the engine arrives by `scripts/fleet-sync.sh --apply` (one-way, from the operator box); it carries no
-credentials; the approval ledger stays per machine.
+On a second Mac the engine is already there: `~/Sync` is a Syncthing folder shared by the mini and the Air, so `~/Sync/tools` arrives with it (no copy step). `fleet-sync.sh` remains only for the per-machine carriers it still names.
 
 ## 3. What stays per machine (never synced)
 
@@ -40,7 +39,7 @@ bash ~/.agents/skills/org/scripts/preflight.sh
 
 Prints one line per requirement (engine path, registry readable, `resolve-model.sh builder` answers, each seat CLI on
 PATH, both skill surfaces resolve) and exits non-zero on the first miss, naming it. Run it before the first `/org`
-call on a new machine and after every `fleet-sync --apply`.
+call on a new machine and whenever Syncthing has just delivered a tools change.
 
 ## 5. Skill surfaces
 

@@ -173,8 +173,7 @@ parallelize freely. Ask what a seat *holds*, not what it costs, when deciding wh
 ## Scripts inventory
 
 - `~/Sync/tools/agents/scripts/`: `dispatch-manager.sh` (front door), `org-dispatch-gated.sh` (gate + brief + lifecycle), `lane-dispatch.py` (any OpenAI-compatible lane by name), `adapter-run.sh` (CLI shapes), `dispatch-mini.sh`, `nim-dispatch.py` (DEPRECATED, refuses to run), `extract-verdict.sh`, `gideon-sync-write.sh`, `atlas-sync-write.sh`, `stale-task-sweep.sh`.
-- `~/Sync/skills/21-cli-orchestration/`: `dispatch-antigravity.sh`, `dispatch-neo.sh`, `dispatch-cerebras.sh`, `dispatch-claude.sh`, `dispatch-atlas.sh` (legacy shim → antigravity) — script home only.
-- `~/Sync/skills/org/scripts/`: `nvidia-batch.sh` (archived stub; exits 2 and names the lane to use).
+- `~/Sync/skills/21-cli-orchestration/`: `dispatch-antigravity.sh`, `dispatch-claude.sh`, `dispatch-atlas.sh` (legacy shim → antigravity) — script home only. `dispatch-neo.sh`, `dispatch-cerebras.sh` and `org/scripts/nvidia-batch.sh` are archived stubs (2026-09-24; originals in `_archive/dead-dispatchers-20260924/`). They exit 2 and run nothing.
 
 ## Workspace layout: one seat home, two aliases (corrected 2026-09-16)
 - `/Users/Shared/Agents/{Gideon,Atlas,Neo}` are the REAL seat homes — deliberately outside `~` (which is itself a git
